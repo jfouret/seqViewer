@@ -34,7 +34,7 @@ public class positions {
 	
 	public String getExonHTML(int start,int size,String seqType){
 		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.fontFamilly+";font-size:"+myFONT.fontSize+";\">");
+		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.fontSize+";\">");
 		for (int i=start;(i<exons.length)&&(i<=start+size);i+=1){
 			if (seqType=="Amino acids"){
 				builder.append(exonsHTML[(int)(i*3)]);

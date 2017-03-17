@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class feature {
+	private int Num ; //number id of the feature
 	private String id;// id of the class
 	private String description;//description of uUniprot Field
 	private String type;// type of uUniprot Field for representation
@@ -11,13 +12,22 @@ public class feature {
 	private int end; //0-based end (ref & prot pos)
 	private String[] HTML_built; //html enriched character 
 	
+	public int getNum(){
+		return(Num);
+	}
+	
 	public Boolean isSelected(HashMap<String,Boolean> availableType){
 		return(availableType.get(id));
 	}
 	
-	public feature(String Input_id, int in_start, int in_end, featureType featType, positions positions){
+	public String getDescription(){
+		return(description); // 
+	}
+	
+	public feature(String Input_id, int in_start, int in_end,String input_desc, featureType featType, positions positions,int input_num){
+		Num=input_num;
 		id=Input_id;
-		description=featType.getDesc(id);
+		description=input_desc;
 		type=featType.getType(Input_id);
 		start=in_start;
 		end=in_end-1; // from 0-based excluded to 0-based included

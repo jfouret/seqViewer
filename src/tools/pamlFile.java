@@ -69,7 +69,7 @@ public class pamlFile extends File {
 		}
 		HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
 		StyleSheet styleSheet = new StyleSheet();
-		styleSheet.addRule(".site {color: white;font-family: "+myFONT.fontFamilly+";font-size:"+myFONT.fontSize+";}");
+		styleSheet.addRule(".site {color: white;font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.fontSize+";}");
 		styleSheet.addRule(".site b span {display:none;}");
 		styleSheet.addRule(".site b:hover span {display:inline; font-weight:normal;}");
 		styleSheet.addRule(".site b:hover {display:inline;}</style>");
@@ -124,12 +124,12 @@ public class pamlFile extends File {
 				toolTipBuilder.append(selectedToolTip[(int)(i)*3]);
 				builder.append(selectedHTML[i*3]+selectedHTML[i*3+1]+selectedHTML[i*3+2]);
 			}else {
-				System.out.println(i+"multiple of 3 :"+(i % 3));
+				//System.out.println(i+"multiple of 3 :"+(i % 3));
 				if (i % 3 == 0){
-					System.out.println("YES");
+					//System.out.println("YES");
 					toolTipBuilder.append(selectedToolTip[i]);
 				}else{
-					System.out.println("NO");
+					//System.out.println("NO");
 				}
 				builder.append(selectedHTML[i]);
 			}

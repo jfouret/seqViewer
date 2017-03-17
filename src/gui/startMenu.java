@@ -150,7 +150,7 @@ public class startMenu extends JFrame {
 		    });
 		
 		JFormattedTextField frmtdtxtfldSeqviewerForPositive = new JFormattedTextField();
-		frmtdtxtfldSeqviewerForPositive.setFont(new Font("Minya Nouvelle", Font.BOLD, 16));
+		frmtdtxtfldSeqviewerForPositive.setFont(new Font("Castellar", Font.BOLD, 10));
 		frmtdtxtfldSeqviewerForPositive.setForeground(new Color(0, 0, 255));
 		frmtdtxtfldSeqviewerForPositive.setEditable(false);
 		frmtdtxtfldSeqviewerForPositive.setHorizontalAlignment(SwingConstants.CENTER);

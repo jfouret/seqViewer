@@ -26,7 +26,7 @@ public class htmlBlock {
 		ArrayList<String> backgroundList = species.getBackground();
 		ArrayList<String> foregroundList = species.getForeground();
 		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.fontFamilly+";font-size:"+myFONT.fontSize+"; text-align: right;\">");
+		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.fontSize+"; text-align: right;\">");
 		for (String s: backgroundList ) {
 			builder.append("<b>"+s+tools.myCST.STARTARROW+"</b><br>");
 		}
@@ -44,7 +44,7 @@ public class htmlBlock {
 		speciesList.addAll(backgroundList); // add first arraylist
 		speciesList.addAll(foregroundList); // add Second arraylist
 		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.fontFamilly+";font-size:"+myFONT.fontSize+";\">");
+		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.fontSize+";\">");
 		for (String s: speciesList ) {
 		//for (HashMap.Entry<String, String[]> entry : arrayHTML.entrySet()) {
 			//System.out.println("SPECIES:"+entry.getKey());
