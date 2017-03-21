@@ -6,6 +6,7 @@ import java.util.HashMap;
 public class feature {
 	private int Num ; //number id of the feature
 	private String id;// id of the class
+	private String id_desc;// id of the class description
 	private String description;//description of uUniprot Field
 	private String type;// type of uUniprot Field for representation
 	private int start; //0-based start (ref & prot pos)
@@ -24,9 +25,14 @@ public class feature {
 		return(description); // 
 	}
 	
+	public String getType(){
+		return((id_desc)); // 
+	}
+	
 	public feature(String Input_id, int in_start, int in_end,String input_desc, featureType featType, positions positions,int input_num){
 		Num=input_num;
 		id=Input_id;
+		id_desc=featType.getDesc(Input_id);
 		description=input_desc;
 		type=featType.getType(Input_id);
 		start=in_start;

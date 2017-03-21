@@ -3,6 +3,7 @@ package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
@@ -11,6 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JFormattedTextField;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.JLabel;
@@ -23,10 +25,11 @@ import java.util.regex.Pattern;
 
 import javax.swing.JComboBox;
 import java.awt.Label;
+import javax.swing.JTextPane;
 
 
 public class startMenu extends JFrame {
-
+	
 	/**
 	 * 
 	 */
@@ -39,6 +42,7 @@ public class startMenu extends JFrame {
 	private String suffix_alignmentPath= "/codon_aln.fa";
 	private String suffix_positionsPath= "/posDict.tab";
 	private String suffix_uniprotPath= "/uniprot.tab";
+	private String suffix_namePath= "/name.tab";
 	/** 
 	 * Definition of tools to choose species file and alignment file
 	 */
@@ -47,8 +51,13 @@ public class startMenu extends JFrame {
 	String pamlPath = new String();
 	String positionsPath = new String();
 	String uniprotPath = new String();
+	String namePath = new String();
 	String genCodeChoice = "standard";
+	tools.nameFile nameFile;
 	private JTextField txtGenename;
+	private JTextField textRefSeq;
+	private JTextField textUniProt;
+	private JTextField textkgID;
 	
 	public void SetPaths(String Input_Path){
 		alignmentPath=Input_Path+suffix_alignmentPath;
@@ -56,6 +65,7 @@ public class startMenu extends JFrame {
 		pamlPath=Input_Path+suffix_pamlPath;
 		positionsPath=Input_Path+suffix_positionsPath;
 		uniprotPath=Input_Path+suffix_uniprotPath;
+		namePath=Input_Path+suffix_namePath;
 		textFieldGenePath.setText(Input_Path);
 		Pattern pattern = Pattern.compile(".*\\\\(.*?)$");
 		Matcher matcher = pattern.matcher(Input_Path);
@@ -71,6 +81,20 @@ public class startMenu extends JFrame {
 				txtGenename.setText("GeneName");
 			}
 		}
+		try {
+			nameFile= new tools.nameFile(namePath);
+			textRefSeq.setText(nameFile.getRefSeq());
+			textUniProt.setText(nameFile.getUniprot());
+			textkgID.setText(nameFile.getKgID());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			textRefSeq.setText("No name.tab file");
+			textUniProt.setText("No name.tab file");
+			textkgID.setText("No name.tab file");
+		}
+		
+		
 	}
 
 	/**
@@ -78,7 +102,7 @@ public class startMenu extends JFrame {
 	 */
 	public startMenu() {	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 394);
+		setBounds(100, 100, 450, 405);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -108,7 +132,6 @@ public class startMenu extends JFrame {
 		        if (returnValue == JFileChooser.APPROVE_OPTION) {
 		          File selectedFile = fileChooser.getSelectedFile();
 		          startMenu.this.SetPaths(selectedFile.getPath());
-		          
 		        }
 		      }
 		    });
@@ -126,7 +149,7 @@ public class startMenu extends JFrame {
 		contentPane.add(separator_2);
 		
 		JButton btnVisualize = new JButton("Visualize");
-		btnVisualize.setBounds(293, 227, 89, 23);
+		btnVisualize.setBounds(66, 261, 168, 26);
 		contentPane.add(btnVisualize);
 		
 		btnVisualize.addActionListener(new ActionListener() {
@@ -149,20 +172,11 @@ public class startMenu extends JFrame {
 		          }
 		    });
 		
-		JFormattedTextField frmtdtxtfldSeqviewerForPositive = new JFormattedTextField();
-		frmtdtxtfldSeqviewerForPositive.setFont(new Font("Castellar", Font.BOLD, 10));
-		frmtdtxtfldSeqviewerForPositive.setForeground(new Color(0, 0, 255));
-		frmtdtxtfldSeqviewerForPositive.setEditable(false);
-		frmtdtxtfldSeqviewerForPositive.setHorizontalAlignment(SwingConstants.CENTER);
-		frmtdtxtfldSeqviewerForPositive.setBackground(new Color(255, 255, 224));
-		frmtdtxtfldSeqviewerForPositive.setText("SeqViewer for positive selection impacts visualization");
-		frmtdtxtfldSeqviewerForPositive.setBounds(0, 0, 434, 37);
-		contentPane.add(frmtdtxtfldSeqviewerForPositive);
-		
 		JFormattedTextField frmtdtxtfldLoadAMultiple = new JFormattedTextField();
 		frmtdtxtfldLoadAMultiple.setEditable(false);
+		frmtdtxtfldLoadAMultiple.setFont(new Font("Tahoma", Font.BOLD, 12));
+		frmtdtxtfldLoadAMultiple.setHorizontalAlignment(SwingConstants.CENTER);
 		frmtdtxtfldLoadAMultiple.setText("Load the gene folder");
-		frmtdtxtfldLoadAMultiple.setHorizontalAlignment(SwingConstants.LEFT);
 		frmtdtxtfldLoadAMultiple.setBackground(new Color(255, 255, 255));
 		frmtdtxtfldLoadAMultiple.setBounds(32, 61, 366, 23);
 		contentPane.add(frmtdtxtfldLoadAMultiple);
@@ -172,26 +186,91 @@ public class startMenu extends JFrame {
 		contentPane.add(textFieldGenePath);
 		textFieldGenePath.setColumns(10);
 		
-		JLabel lblName = new JLabel("Name:");
-		lblName.setBounds(10, 227, 46, 23);
+		JLabel lblName = new JLabel("Name :");
+		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblName.setBounds(10, 142, 96, 23);
 		contentPane.add(lblName);
 		
 		txtGenename = new JTextField();
 		txtGenename.setText("geneName");
-		txtGenename.setBounds(48, 227, 86, 23);
+		txtGenename.setBounds(116, 142, 86, 23);
 		contentPane.add(txtGenename);
 		txtGenename.setColumns(10);
 		
 		Label label = new Label("Alignment Type:");
-		label.setBounds(10, 264, 89, 23);
+		label.setAlignment(Label.RIGHT);
+		label.setBounds(42, 232, 105, 23);
 		contentPane.add(label);
+
+		ClassLoader classLoader = getClass().getClassLoader();
+		JLabel v3dimgLab = new JLabel();
+		v3dimgLab.setBounds(10, 296, 155, 56);
+		ImageIcon v3dimg = new ImageIcon(new ImageIcon(classLoader.getResource("ressources/viroscan.jpg")).getImage().getScaledInstance(v3dimgLab.getWidth(), v3dimgLab.getHeight(), Image.SCALE_DEFAULT));
+		v3dimgLab.setIcon(v3dimg);
+		contentPane.add(v3dimgLab);
+		
+		JLabel ciriimgLab = new JLabel();
+		ciriimgLab.setBounds(175, 298, 59, 56);
+		ImageIcon ciriimg = new ImageIcon(new ImageIcon(classLoader.getResource("ressources/CIRI.png")).getImage().getScaledInstance(ciriimgLab.getWidth(), ciriimgLab.getHeight(), Image.SCALE_DEFAULT));
+		ciriimgLab.setIcon(ciriimg);
+		contentPane.add(ciriimgLab);
 		
 		seqTypeBox = new JComboBox<String>();
-		seqTypeBox.setBounds(100, 264, 161, 23);
+		seqTypeBox.setBounds(156, 232, 161, 23);
 		seqTypeBox.addItem("Nucleotids");
 		seqTypeBox.addItem("Amino acids");
 		seqTypeBox.addItem("Codons");
 		seqTypeBox.setSelectedItem("Nucleotids");
 		contentPane.add(seqTypeBox);
+		
+		JLabel lblTitle = new JLabel("<html><div align=\"center\"><b>SeqViewer: </b><br><i> A visualizer of impacts of a branch-specific evolution for sites/domains</div></html>");
+		lblTitle.setForeground(Color.BLUE);
+		lblTitle.setBackground(new Color(153, 255, 153));
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblTitle.setBounds(5, 5, 420, 44);
+		contentPane.add(lblTitle);
+		
+		
+		
+		JTextPane txtpnHuh = new JTextPane();
+		txtpnHuh.setContentType("text/html");
+		txtpnHuh.setEditable(false);
+		txtpnHuh.setText("<html style=\"font-family: Monospace;\"> Author : Julien FOURET<br> Version 1.0.1 </html>");
+		txtpnHuh.setBounds(264, 298, 156, 49);
+		contentPane.add(txtpnHuh);
+		
+		JLabel lblRefseqId = new JLabel("RefSeq ID :");
+		lblRefseqId.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblRefseqId.setBounds(212, 142, 86, 23);
+		contentPane.add(lblRefseqId);
+		
+		textRefSeq = new JTextField();
+		textRefSeq.setText("");
+		textRefSeq.setColumns(10);
+		textRefSeq.setBounds(308, 142, 86, 23);
+		contentPane.add(textRefSeq);
+		
+		JLabel lblUniprotId = new JLabel("UniProt ID :");
+		lblUniprotId.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblUniprotId.setBounds(212, 176, 86, 23);
+		contentPane.add(lblUniprotId);
+		
+		textUniProt = new JTextField();
+		textUniProt.setText("");
+		textUniProt.setColumns(10);
+		textUniProt.setBounds(308, 176, 86, 23);
+		contentPane.add(textUniProt);
+		
+		JLabel lblKnowngeneId = new JLabel("KnownGene ID :");
+		lblKnowngeneId.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblKnowngeneId.setBounds(10, 176, 96, 23);
+		contentPane.add(lblKnowngeneId);
+		
+		textkgID = new JTextField();
+		textkgID.setText("");
+		textkgID.setColumns(10);
+		textkgID.setBounds(116, 176, 86, 23);
+		contentPane.add(textkgID);
 	}
 }

@@ -64,7 +64,7 @@ public class featureFile extends File {
 	}
 	
 	public String getToolTipText(Integer input_num){
-		return(featureArray[input_num].getDescription());
+		return("<html><b>"+featureArray[input_num].getType()+" : </b>"+featureArray[input_num].getDescription()+"</html>");
 	}
 	
 }

@@ -4,6 +4,7 @@ package gui;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JTextPane;
@@ -21,6 +22,9 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import tools.feature;
 import tools.myFONT;
+import java.awt.SystemColor;
+import javax.swing.UIManager;
+import javax.swing.ScrollPaneConstants;
 
 public class VisualizeFrame extends JFrame {
 
@@ -54,7 +58,7 @@ public class VisualizeFrame extends JFrame {
 	
 	
 	private static final long serialVersionUID = 3034391181248326868L;
-	private JPanel contentPane;
+	private JScrollPane contentPane;
 	private JTextPane txtpnAln;
 	private HashMap<Integer,JTextPane> HashUniprot;
 	//private JTextPane txtpnUniprot;
@@ -112,7 +116,7 @@ public class VisualizeFrame extends JFrame {
 		slideEndLab.setBounds(legendSize+285, 10, 80, 20);
 		slideStartLab.setBounds(legendSize+5, 10, 80, 20);
 		slider.setBounds(legendSize+85, 10, 200, 20);
-		btnUpdateUniprot.setBounds(legendSize+400, 10, 105, 23);
+		btnUpdateUniprot.setBounds(510, 10, 229, 23);
 		viewSize=(int)(((windowWidth)-10-legendSize)/myFONT.fontwidth);
 		txtpnRefPos.setBounds(legendSize+5, 60, ctrlWidth-100, 20);
 		txtpnAlnSpecies.setBounds(5, 80, legendSize-5, aln.getHeight());
@@ -157,8 +161,9 @@ public class VisualizeFrame extends JFrame {
 		windowHeight=600;
 		
 		setBounds(100, 100, windowWidth, windowHeight);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.WHITE);
+		contentPane = new JScrollPane();
+		contentPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		contentPane.setBackground(new Color(204, 204, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 			
@@ -218,7 +223,7 @@ public class VisualizeFrame extends JFrame {
 		        	update_size();
 		        }
 		});
-		btnUpdateUniprot = new JButton("Update Uniprot");
+		btnUpdateUniprot = new JButton("Uniprot: update selection");
 		btnUpdateUniprot.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
 		    	  featureFile.availableType=featSelect.UpdateAvailableType();
