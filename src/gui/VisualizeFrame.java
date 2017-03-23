@@ -3,7 +3,6 @@ package gui;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
@@ -22,9 +21,9 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import tools.feature;
 import tools.myFONT;
-import java.awt.SystemColor;
-import javax.swing.UIManager;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
 
 public class VisualizeFrame extends JFrame {
 
@@ -55,6 +54,7 @@ public class VisualizeFrame extends JFrame {
 	int windowHeight;
 	int ctrlWidth;
 	int ctrlHeight;
+	int AvailViewSize;
 	
 	
 	private static final long serialVersionUID = 3034391181248326868L;
@@ -65,12 +65,14 @@ public class VisualizeFrame extends JFrame {
 	private JTextPane txtpnAlnSpecies;
 	private JTextPane txtpnRefPos;
 	private JTextPane txtpnSelection;
+	private JTextPane txtpnlegendSelection;
 	private JSlider slider;
 	private Label slideEndLab;
 	private Label slideStartLab;
 	private gui.featureSelect featSelect;
 	private JButton btnUpdateUniprot ;
 	
+	private String GENETEST;
 	
 	/**
 	 * set dynamic change to the frame
@@ -117,15 +119,22 @@ public class VisualizeFrame extends JFrame {
 		slideStartLab.setBounds(legendSize+5, 10, 80, 20);
 		slider.setBounds(legendSize+85, 10, 200, 20);
 		btnUpdateUniprot.setBounds(510, 10, 229, 23);
-		viewSize=(int)(((windowWidth)-10-legendSize)/myFONT.fontwidth);
-		txtpnRefPos.setBounds(legendSize+5, 60, ctrlWidth-100, 20);
+		AvailViewSize=ctrlWidth-15-legendSize;
+		viewSize=(int)(AvailViewSize/myFONT.getWidth());
+		
+		//viewSize=(int)(AvailViewSize/(Long.parseLong(GENETEST)));
+		Integer alnWidth=txtpnAln.getPreferredSize().width;
+		txtpnRefPos.setBounds(legendSize+5, 60, alnWidth, 20);
 		txtpnAlnSpecies.setBounds(5, 80, legendSize-5, aln.getHeight());
-		txtpnAln.setBounds(legendSize+5, 80, ctrlWidth-100, aln.getHeight());
-		txtpnSelection.setBounds(legendSize+5, 80+aln.getHeight(), ctrlWidth-100, 20);
+		//txtpnAln.setBounds(legendSize+5, 80, (int) (viewSize*myFONT.getWidth()), aln.getHeight());
+		//txtpnAln.setBounds(legendSize+5, 80, (int) (viewSize*(Long.parseLong(GENETEST))), aln.getHeight());
+		txtpnAln.setBounds(legendSize+5, 80,alnWidth , aln.getHeight());
+		txtpnlegendSelection.setBounds(5,80+aln.getHeight(),legendSize-5,20);
+		txtpnSelection.setBounds(legendSize+5, 80+aln.getHeight(), alnWidth, 20);
 		//txtpnUniprot.setBounds();
 		iterPos=0;
 		for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
-			HashUniprot.get(NumTxtPaneToAdd).setBounds(legendSize+5, (int) ((80+aln.getHeight()+myFONT.fontHeight)+iterPos*(myFONT.fontHeight+1)), ctrlWidth-100, (int) (0+myFONT.fontHeight));
+			HashUniprot.get(NumTxtPaneToAdd).setBounds(legendSize+5, (int) ((80+aln.getHeight()+myFONT.fontHeight)+iterPos*(myFONT.fontHeight+1)), alnWidth, (int) (0+myFONT.fontHeight));
 			iterPos+=1;
 		}
 		if (seqType=="Codons"){
@@ -146,6 +155,7 @@ public class VisualizeFrame extends JFrame {
 	
 	public VisualizeFrame(String alignmentPath, String speciesPath,String pamlPath,String positionsPath,String uniprotPath,tools.genCode genCode,String input_seqType,String geneName) throws FileNotFoundException {
 		frametitle=geneName + " - " + input_seqType;
+		GENETEST=geneName;
 		setTitle( frametitle );
 		seqType=input_seqType;
 		tools.alnFile alnFile= new tools.alnFile(alignmentPath);
@@ -163,11 +173,12 @@ public class VisualizeFrame extends JFrame {
 		setBounds(100, 100, windowWidth, windowHeight);
 		contentPane = new JScrollPane();
 		contentPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		contentPane.setBackground(new Color(204, 204, 204));
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 			
 		txtpnAln = new JTextPane();
+		txtpnAln.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		txtpnAln.setContentType("text/html");
 		txtpnAln.setBackground(Color.WHITE);
 		txtpnAln.setEditable(false);
@@ -182,13 +193,24 @@ public class VisualizeFrame extends JFrame {
 		txtpnAlnSpecies.setBackground(Color.WHITE);
 		txtpnAlnSpecies.setEditable(false);
 		txtpnAlnSpecies.setText(aln.getHtmlBlock().getHTMLSpecies(species));
+		txtpnAlnSpecies.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		txtpnlegendSelection= new JTextPane();
+		txtpnlegendSelection.setContentType("text/html");
+		txtpnlegendSelection.setBackground(Color.WHITE);
+		txtpnlegendSelection.setEditable(false);
+		txtpnlegendSelection.setText("<html><div align=\"right\"><b color=\"red\">w>1</b> <b color=\"black\"> w<1</b></div></html>");
+		txtpnlegendSelection.setBorder(new LineBorder(new Color(0, 0, 0)));
+		
 		
 		txtpnRefPos= new JTextPane();
+		txtpnRefPos.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		txtpnRefPos.setContentType("text/html");
 		txtpnRefPos.setBackground(Color.WHITE);
 		txtpnRefPos.setEditable(false);
 		
 		txtpnSelection= new JTextPane();
+		txtpnSelection.setBorder(new LineBorder(new Color(0, 0, 0)));
 		txtpnSelection.setContentType("text/html");
 		txtpnSelection.setBackground(Color.WHITE);
 		txtpnSelection.setEditable(false);
@@ -237,6 +259,7 @@ public class VisualizeFrame extends JFrame {
 		    	  for (feature featToAdd: featureFile.featureArray){
 		    		  if (featToAdd.isSelected(featureFile.availableType)){
 		    			  HashUniprot.put(featToAdd.getNum(), new JTextPane());
+		    			  HashUniprot.get(featToAdd.getNum()).setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		    			  HashUniprot.get(featToAdd.getNum()).setContentType("text/html");
 		    			  HashUniprot.get(featToAdd.getNum()).setBackground(Color.WHITE);
 		    		  }
@@ -258,6 +281,7 @@ public class VisualizeFrame extends JFrame {
 		contentPane.add(slider);
 		contentPane.add(slideStartLab);
 		contentPane.add(btnUpdateUniprot);
+		contentPane.add(txtpnlegendSelection);
 		contentPane.setLayout(null);
 		
 		featSelect = new gui.featureSelect(featureFile,frametitle);
