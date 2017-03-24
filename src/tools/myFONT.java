@@ -8,11 +8,11 @@ public class myFONT {
 	public static Long fontHeight = (long) 21 ;
 	public static Long fontwidth = (long) 11.5 ;
 
-	public static Long getWidth(){
+	public static Double getWidth(){
 		if (tools.OSvalidator.isWindows() | tools.OSvalidator.isMac()){
-			return (long) 11;
+			return 10.15;
 		}else{
-			return (long) 11;
+			return 10.0;
 		}
 	}
 	
