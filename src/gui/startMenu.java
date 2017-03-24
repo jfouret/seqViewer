@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import java.awt.Label;
 import javax.swing.JTextPane;
+import javax.swing.JSlider;
+import javax.swing.JScrollBar;
 
 
 public class startMenu extends JFrame {
@@ -52,6 +54,7 @@ public class startMenu extends JFrame {
 	String positionsPath = new String();
 	String uniprotPath = new String();
 	String namePath = new String();
+	String WorkDir = ".";
 	String genCodeChoice = "standard";
 	tools.nameFile nameFile;
 	private JTextField txtGenename;
@@ -110,10 +113,13 @@ public class startMenu extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnLoadGene = new JButton("Load folder");
-		btnLoadGene.setToolTipText("test!!!");
+		JButton btnDefaultFolder = new JButton("Set default folder");
+		btnDefaultFolder.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		
-		btnLoadGene.setBounds(10, 95, 105, 23);
+		btnLoadGene.setBounds(15, 88, 105, 23);
+		btnDefaultFolder.setBounds(15, 114, 145, 13);
 		contentPane.add(btnLoadGene);
+		contentPane.add(btnDefaultFolder);
 		
 		
 		/**
@@ -121,6 +127,22 @@ public class startMenu extends JFrame {
 		 */
 		
 		btnLoadGene.addActionListener(new ActionListener() {
+		      public void actionPerformed(ActionEvent ae) {
+		    	JFileChooser fileChooser = new JFileChooser(startMenu.this.WorkDir);
+		    	fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		        //
+		        // disable the "All files" option.
+		        //
+		    	fileChooser.setAcceptAllFileFilterUsed(false);
+		        int returnValue = fileChooser.showOpenDialog(null);
+		        if (returnValue == JFileChooser.APPROVE_OPTION) {
+		          File selectedFile = fileChooser.getSelectedFile();
+		          startMenu.this.SetPaths(selectedFile.getPath());
+		        }
+		      }
+		    });
+		
+		btnDefaultFolder.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
 		    	JFileChooser fileChooser = new JFileChooser();
 		    	fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -131,7 +153,7 @@ public class startMenu extends JFrame {
 		        int returnValue = fileChooser.showOpenDialog(null);
 		        if (returnValue == JFileChooser.APPROVE_OPTION) {
 		          File selectedFile = fileChooser.getSelectedFile();
-		          startMenu.this.SetPaths(selectedFile.getPath());
+		          startMenu.this.WorkDir=selectedFile.getAbsolutePath();
 		        }
 		      }
 		    });
@@ -178,11 +200,11 @@ public class startMenu extends JFrame {
 		frmtdtxtfldLoadAMultiple.setHorizontalAlignment(SwingConstants.CENTER);
 		frmtdtxtfldLoadAMultiple.setText("Load the gene folder");
 		frmtdtxtfldLoadAMultiple.setBackground(new Color(255, 255, 255));
-		frmtdtxtfldLoadAMultiple.setBounds(32, 61, 366, 23);
+		frmtdtxtfldLoadAMultiple.setBounds(32, 54, 366, 23);
 		contentPane.add(frmtdtxtfldLoadAMultiple);
 		
 		textFieldGenePath = new JTextField();
-		textFieldGenePath.setBounds(125, 96, 299, 20);
+		textFieldGenePath.setBounds(125, 88, 299, 23);
 		contentPane.add(textFieldGenePath);
 		textFieldGenePath.setColumns(10);
 		
@@ -223,7 +245,7 @@ public class startMenu extends JFrame {
 		seqTypeBox.setSelectedItem("Nucleotids");
 		contentPane.add(seqTypeBox);
 		
-		JLabel lblTitle = new JLabel("<html><div align=\"center\"><b>SeqViewer: </b><br><i> A visualizer of impacts of a branch-specific evolution for sites/domains</div></html>");
+		JLabel lblTitle = new JLabel("<html><div align=\"center\"><b>SeqViewer: </b><br><i> Impacts visualizer of branch-specific evolution for sites/domains</div></html>");
 		lblTitle.setForeground(Color.BLUE);
 		lblTitle.setBackground(new Color(153, 255, 153));
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -236,7 +258,7 @@ public class startMenu extends JFrame {
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html style=\"font-family: Monospace;\"> Author : Julien FOURET<br> Version 1.0.2 </html>");
+		txtpnHuh.setText("<html style=\"font-family: Monospace;\"> Author : Julien FOURET<br> Version 1.1.0 </html>");
 		txtpnHuh.setBounds(264, 298, 156, 49);
 		contentPane.add(txtpnHuh);
 		

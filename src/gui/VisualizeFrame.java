@@ -3,6 +3,7 @@ package gui;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
@@ -58,7 +59,7 @@ public class VisualizeFrame extends JFrame {
 	
 	
 	private static final long serialVersionUID = 3034391181248326868L;
-	private JScrollPane contentPane;
+	private JPanel contentPane;
 	private JTextPane txtpnAln;
 	private HashMap<Integer,JTextPane> HashUniprot;
 	//private JTextPane txtpnUniprot;
@@ -171,8 +172,7 @@ public class VisualizeFrame extends JFrame {
 		windowHeight=600;
 		
 		setBounds(100, 100, windowWidth, windowHeight);
-		contentPane = new JScrollPane();
-		contentPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
