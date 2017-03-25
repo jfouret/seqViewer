@@ -40,8 +40,8 @@ public class featureSelect extends JFrame {
 		//getContentPane().setLayout(null);
 		int i = 0;
 		for (String id: featFile.availableType.keySet()){
-			System.out.println(id);
-			System.out.println(featFile.featType.getCol(id));
+			//System.out.println(id);
+			//System.out.println(featFile.featType.getCol(id));
 			idCheck.put(id,new JCheckBox(featFile.featType.getDesc(id)));
 			idCheck.get(id).setBounds(50, 10+i*25, 300, 23);
 			idCheck.get(id).setToolTipText(id);

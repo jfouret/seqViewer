@@ -4,7 +4,7 @@ package gui;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JTextPane;
@@ -12,6 +12,7 @@ import javax.swing.WindowConstants;
 import javax.swing.JSlider;
 import javax.swing.event.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
@@ -19,10 +20,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.text.html.HTMLEditorKit;
-
 import tools.feature;
 import tools.myFONT;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 
@@ -73,7 +72,7 @@ public class VisualizeFrame extends JFrame {
 	private gui.featureSelect featSelect;
 	private JButton btnUpdateUniprot ;
 	
-	private String GENETEST;
+	//private String GENETEST;
 	
 	/**
 	 * set dynamic change to the frame
@@ -154,13 +153,34 @@ public class VisualizeFrame extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public VisualizeFrame(String alignmentPath, String speciesPath,String pamlPath,String positionsPath,String uniprotPath,tools.genCode genCode,String input_seqType,String geneName) throws FileNotFoundException {
+	public VisualizeFrame(String alignmentPath, String speciesPath,String pamlPath,String positionsPath,String uniprotPath,tools.genCode genCode,String input_seqType,String geneName, String UniprotID) throws FileNotFoundException {
+		tools.UniprotWebFasta webFasta;
+		
 		frametitle=geneName + " - " + input_seqType;
-		GENETEST=geneName;
+		//GENETEST=geneName;
 		setTitle( frametitle );
 		seqType=input_seqType;
 		tools.alnFile alnFile= new tools.alnFile(alignmentPath);
 		aln= new tools.Alignment(alnFile.readALN(),genCode);
+		try {
+			webFasta = new tools.UniprotWebFasta("http://www.uniprot.org/uniprot/"+UniprotID+".fasta");
+			//System.out.println(aln.getSeqRef());
+			//System.out.println(webFasta.getSeq());
+			if (!aln.getSeqRef().startsWith(webFasta.getSeq())){
+				String errMessage = "\"BE CAREFULL\"\n"
+	    		        + "The Uniprot Sequence does not match with the one in the alignment\n"
+	    		        + "Uniprot datas are likely to be false! ;-) ";
+	    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "Database Error",
+	    		        JOptionPane.ERROR_MESSAGE);
+			}
+		} catch (IOException e) {
+			String errMessage = "\"URL Error\"\n"
+    		        + "Please check the URL correct.\n"
+    		        + "Check also internet connexion! ;-) ";
+    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "URL is not found",
+    		        JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 		tools.speciesFile speciesFile=new tools.speciesFile(speciesPath);
 		species= speciesFile.readSpecies();
 		aln.format(seqType, species);

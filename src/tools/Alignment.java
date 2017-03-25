@@ -24,12 +24,18 @@ public class Alignment {
 	private HashMap<String,char[]> nuclText  = new HashMap<String,char[]>(); 
 	private HashMap<String,String[]> codText = new HashMap<String,String[]>() ;
 	private HashMap<String,char[]> aaText = new HashMap<String,char[]>() ;
+	
+	public String getSeqRef(){
+		return ((new String(aaText.get("hg19"))).replaceAll("-", ""));
+	}
+	
 	public Alignment(HashMap<String,String> Input_Sequences, genCode Input_geneticCode) {
 		// initiate colors
+		//seqhg19=Input_Sequences.get("hg19").replaceAll("-", "");
 		colorAA.put('D',"E60A0A"); colorAA.put('E',"E60A0A"); colorAA.put('C',"E6E600"); colorAA.put('M',"E6E600"); colorAA.put('K',"145AFF"); colorAA.put('R',"145AFF"); colorAA.put('S',"FA9600"); colorAA.put('T',"FA9600"); colorAA.put('F',"3232AA"); colorAA.put('Y',"3232AA"); colorAA.put('N',"00DCDC"); colorAA.put('Q',"00DCDC"); colorAA.put('G',"EBEBEB"); colorAA.put('V',"0F820F"); colorAA.put('I',"0F820F"); colorAA.put('L',"0F820F"); colorAA.put('A',"C8C8C8"); colorAA.put('W',"B45AB4"); colorAA.put('H',"8282D2"); colorAA.put('P',"DC9682"); 
 		colorNucl.put('A',"145AFF");colorNucl.put('T',"E6E600");colorNucl.put('C',"0F820F");colorNucl.put('G',"E60A0A");
 		geneticCode=Input_geneticCode;
-		Sequences=Input_Sequences;
+		Sequences=Input_Sequences; //wash it ...
 		nuclLen = Sequences.get(Sequences.keySet().toArray()[0]).length();
 		codLen = nuclLen / 3;
 		String species ;
@@ -62,7 +68,7 @@ public class Alignment {
 		    	aaArray[posCounter]=geneticCode.translate(codon);
 		    	codArray[posCounter]=codon;
 		    }else if (codon.length()!=0){
-		    	System.out.println("WTF");
+		    	//System.out.println("WTF");
 		    }
 		    codon="";
 		    charCounter=0;

@@ -26,9 +26,6 @@ import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import java.awt.Label;
 import javax.swing.JTextPane;
-import javax.swing.JSlider;
-import javax.swing.JScrollBar;
-
 
 public class startMenu extends JFrame {
 	
@@ -90,7 +87,6 @@ public class startMenu extends JFrame {
 			textUniProt.setText(nameFile.getUniprot());
 			textkgID.setText(nameFile.getKgID());
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			textRefSeq.setText("No name.tab file");
 			textUniProt.setText("No name.tab file");
@@ -181,7 +177,7 @@ public class startMenu extends JFrame {
 		          tools.genCode chosenGenCode= new tools.genCode(startMenu.this.genCodeChoice);
 		          String seqType= startMenu.this.seqTypeBox.getSelectedItem().toString();
 		          try{
-		        	  gui.VisualizeFrame VisualizeFrame = new gui.VisualizeFrame(alignmentPath,speciesPath,pamlPath,positionsPath,uniprotPath,chosenGenCode,seqType,txtGenename.getText());
+		        	  gui.VisualizeFrame VisualizeFrame = new gui.VisualizeFrame(alignmentPath,speciesPath,pamlPath,positionsPath,uniprotPath,chosenGenCode,seqType,txtGenename.getText(),nameFile.getUniprot());
 			          VisualizeFrame.setVisible(true);
 			          VisualizeFrame.setDefaultCloseOperation(gui.VisualizeFrame.DISPOSE_ON_CLOSE);
 		          }catch(FileNotFoundException e){
@@ -258,7 +254,7 @@ public class startMenu extends JFrame {
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html style=\"font-family: Monospace;\"> Author : Julien FOURET<br> Version 1.1.0 </html>");
+		txtpnHuh.setText("<html style=\"font-family: Monospace;\"> Author : Julien FOURET<br> Version 1.2.0 </html>");
 		txtpnHuh.setBounds(264, 298, 156, 49);
 		contentPane.add(txtpnHuh);
 		
