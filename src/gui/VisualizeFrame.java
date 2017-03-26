@@ -1,6 +1,5 @@
 package gui;
 
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,6 +12,8 @@ import javax.swing.JSlider;
 import javax.swing.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
@@ -26,17 +27,13 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 
 public class VisualizeFrame extends JFrame {
-
-	/**
-	 * 
-	 */
 	
 	private tools.Alignment aln;
 	private String seqType;
 	private String frametitle;
 	private tools.Species species;
 	private tools.featureFile featureFile;
-
+	
 	tools.positions positions;
 	// private String pamlPath= "./out";
 	// private String SpeciesPath= "./species.txt";
@@ -154,11 +151,10 @@ public class VisualizeFrame extends JFrame {
 	 */
 	
 	public VisualizeFrame(String alignmentPath, String speciesPath,String pamlPath,String positionsPath,String uniprotPath,tools.genCode genCode,String input_seqType,String geneName, String UniprotID) throws FileNotFoundException {
-		tools.UniprotWebFasta webFasta;
-		
+		tools.UniprotWebFasta webFasta;	
 		frametitle=geneName + " - " + input_seqType;
 		//GENETEST=geneName;
-		setTitle( frametitle );
+		setTitle(frametitle);
 		seqType=input_seqType;
 		tools.alnFile alnFile= new tools.alnFile(alignmentPath);
 		aln= new tools.Alignment(alnFile.readALN(),genCode);
@@ -186,7 +182,16 @@ public class VisualizeFrame extends JFrame {
 		aln.format(seqType, species);
 		positions= new tools.positions(positionsPath,aln.getSize(),seqType);
 		selection = new tools.pamlFile(pamlPath,positions);
-		featureFile = new tools.featureFile(uniprotPath,positions);
+		//featureFile = new tools.featureFile(uniprotPath,positions);
+		try {
+			featureFile = new tools.featureFile(new URL("http://www.uniprot.org/uniprot/"+UniprotID+".txt"),positions);
+		} catch (MalformedURLException e) {
+			featureFile = new tools.featureFile(uniprotPath,positions);
+			e.printStackTrace();
+		} catch (IOException e) {
+			featureFile = new tools.featureFile(uniprotPath,positions);
+			e.printStackTrace();
+		}
 		htmlEditorKit_selection=selection.buildSelectedHTML(aln.getSize(),seqType);
 		windowWidth=800;
 		windowHeight=600;
@@ -221,8 +226,7 @@ public class VisualizeFrame extends JFrame {
 		txtpnlegendSelection.setEditable(false);
 		txtpnlegendSelection.setText("<html><div align=\"right\"><b color=\"red\">w>1</b> <b color=\"black\"> w<1</b></div></html>");
 		txtpnlegendSelection.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
-		
+			
 		txtpnRefPos= new JTextPane();
 		txtpnRefPos.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		txtpnRefPos.setContentType("text/html");

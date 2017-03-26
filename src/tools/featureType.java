@@ -22,5 +22,8 @@ public class featureType {
 	public String getCol(String id){
 		return(id2col.get(id));
 	}
+	public Boolean isClass(String testString){
+		return id2desc.keySet().contains(testString);
+	}
 }
 

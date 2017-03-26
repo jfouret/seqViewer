@@ -47,6 +47,7 @@ public class featureSelect extends JFrame {
 			idCheck.get(id).setToolTipText(id);
 			getContentPane().add(idCheck.get(id));
 			idCanvas.put(id,new Canvas());
+			//System.out.println(id);
 			idCanvas.get(id).setBackground(Color.decode(featFile.featType.getCol(id)));
 			idCanvas.get(id).setBounds(10, 10+i*25, 35, 23);
 			contentPane.add(idCanvas.get(id));

@@ -29,6 +29,10 @@ public class feature {
 		return((id_desc)); // 
 	}
 	
+	public void appendDescription(String toAppend){
+		description=description+toAppend; // 
+	}
+	
 	public feature(String Input_id, int in_start, int in_end,String input_desc, featureType featType, positions positions,int input_num){
 		Num=input_num;
 		id=Input_id;
