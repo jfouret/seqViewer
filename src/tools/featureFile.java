@@ -44,9 +44,9 @@ public class featureFile {
 				//System.out.println(currentLine+" class :"+split[1]);
 				if (featType.isClass(split[1])){
 					if (split.length==5){
-						featureArrayList.add(new feature(split[1],Integer.parseInt(split[2]), Integer.parseInt(split[3]),split[4],featType,positions,iterNum));
+						featureArrayList.add(new feature(split[1],Integer.parseInt(split[2])-1, Integer.parseInt(split[3]),split[4],featType,positions,iterNum));
 					}else{
-						featureArrayList.add(new feature(split[1],Integer.parseInt(split[2]), Integer.parseInt(split[3]),"",featType,positions,iterNum));
+						featureArrayList.add(new feature(split[1],Integer.parseInt(split[2])-1, Integer.parseInt(split[3]),"",featType,positions,iterNum));
 					}
 					iterNum+=1; // num == position in feature array !!!
 					// step 2 check in availableType is the type is present ? add if not with False
@@ -55,7 +55,7 @@ public class featureFile {
 						availableType.put(split[1],false);
 					}
 				}else{
-					featureArrayList.get(iterNum-1).appendDescription("\n"+split[1]);
+					featureArrayList.get(iterNum-1).appendDescription("<br>"+split[1]);
 				}
 			}
 		}

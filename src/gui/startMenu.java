@@ -254,7 +254,7 @@ public class startMenu extends JFrame {
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html style=\"font-family: Monospace;\"> Author : Julien FOURET<br> Version 1.3.0 </html>");
+		txtpnHuh.setText("<html style=\"font-family: Monospace;\"> Author : Julien FOURET<br> Version 1.3.1 </html>");
 		txtpnHuh.setBounds(264, 298, 156, 49);
 		contentPane.add(txtpnHuh);
 		

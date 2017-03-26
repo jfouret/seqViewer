@@ -43,7 +43,7 @@ public class feature {
 		end=in_end-1; // from 0-based excluded to 0-based included
 		int alnStart=(positions.getPosFromRef(start*3+1)-1); 
 		int alnEnd=positions.getPosFromRef(end*3+1); // excluded
-		HTML_built=new String[positions.getAlnSize()];
+		HTML_built=new String[positions.getAlnSize()+1];
 		Arrays.fill(HTML_built, "<b color=\"white\" >"+myCST.BLOCK+"</b>");
 		switch (type) {
 		case "interval":  
@@ -53,9 +53,15 @@ public class feature {
 			break;
 		case "site":
 			HTML_built[alnStart]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
-			HTML_built[alnStart+1]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
-			HTML_built[alnStart+2]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
-			break;
+        	HTML_built[alnStart+1]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
+        	HTML_built[alnStart+2]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
+        	for (int i=alnStart+3;i<alnEnd-1;i+=1){
+				HTML_built[i]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
+			}
+        	HTML_built[alnEnd+1]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
+        	HTML_built[alnEnd]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
+        	HTML_built[alnEnd-1]="<b color=\""+featType.getCol(id)+"\">"+myCST.FILLARROW+"</b>";
+        	break;
         case "2site":
         	HTML_built[alnStart]="<b color=\""+featType.getCol(id)+"\">"+myCST.BLOCK+"</b>";
         	HTML_built[alnStart+1]="<b color=\""+featType.getCol(id)+"\">"+myCST.BLOCK+"</b>";
