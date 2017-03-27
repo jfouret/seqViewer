@@ -16,6 +16,15 @@ public class myFONT {
 		}
 	}
 	
+	public static Double getHeight(){
+		if (tools.OSvalidator.isWindows() | tools.OSvalidator.isMac()){
+			return 21.0;
+		}else{
+			return 25.10;
+		}
+	}
+	
+	
 	public static String getFontFamilly(){
 		if (tools.OSvalidator.isWindows() | tools.OSvalidator.isMac()){
 			return "'Courier New', Courier, monospace";

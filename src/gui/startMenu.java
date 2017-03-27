@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import java.awt.Label;
 import javax.swing.JTextPane;
-
 public class startMenu extends JFrame {
 	
 	/**
@@ -290,5 +289,6 @@ public class startMenu extends JFrame {
 		textkgID.setColumns(10);
 		textkgID.setBounds(116, 176, 86, 23);
 		contentPane.add(textkgID);
+		
 	}
 }

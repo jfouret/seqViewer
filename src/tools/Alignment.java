@@ -100,7 +100,7 @@ public class Alignment {
 		return(htmlTextMap);
 	}
 	public int getHeight(){
-		double height = htmlTextMap.getNLine()*myFONT.fontHeight;
+		double height = htmlTextMap.getNLine()*myFONT.getHeight();
 		return((int)height+1);
 	}
 	public int getSize(){

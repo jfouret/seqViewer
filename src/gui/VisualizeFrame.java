@@ -25,6 +25,8 @@ import tools.feature;
 import tools.myFONT;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.JTextField;
+import java.awt.Font;
 
 public class VisualizeFrame extends JFrame {
 	
@@ -44,6 +46,7 @@ public class VisualizeFrame extends JFrame {
 	private int viewSize=61;
 	private int start=0;
 	private int legendSize=110;
+	private int startFeature;
 	private HTMLEditorKit htmlEditorKit_selection = new HTMLEditorKit();
 	
 	// Dimensions
@@ -52,10 +55,15 @@ public class VisualizeFrame extends JFrame {
 	int ctrlWidth;
 	int ctrlHeight;
 	int AvailViewSize;
-	
+	int numFT;
+	int maxFTbyPage;
+	int totPage;
+	int numPage=1;
+	int heightFTPane;
 	
 	private static final long serialVersionUID = 3034391181248326868L;
 	private JPanel contentPane;
+	private JPanel FeaturePane;
 	private JTextPane txtpnAln;
 	private HashMap<Integer,JTextPane> HashUniprot;
 	//private JTextPane txtpnUniprot;
@@ -68,12 +76,55 @@ public class VisualizeFrame extends JFrame {
 	private Label slideStartLab;
 	private gui.featureSelect featSelect;
 	private JButton btnUpdateUniprot ;
+	private JTextField txtFeaturePageOn = new JTextField();
 	
 	//private String GENETEST;
 	
 	/**
 	 * set dynamic change to the frame
 	 */
+	
+	public void updateFT() {
+  	  featureFile.availableType=featSelect.UpdateAvailableType();
+  	  // remove all JTextPane
+  	  for (JTextPane featTextPaneToRemove : HashUniprot.values()){
+  		  gui.VisualizeFrame.this.FeaturePane.remove(featTextPaneToRemove);
+  	  }
+  	  // re-initiate HashUniprot
+  	  HashUniprot= new HashMap<Integer,JTextPane>();
+  	  // 
+  	  for (feature featToAdd: featureFile.featureArray){
+  		  if (featToAdd.isSelected(featureFile.availableType)){
+  			  HashUniprot.put(featToAdd.getNum(), new JTextPane());
+  			  HashUniprot.get(featToAdd.getNum()).setBorder(new TitledBorder(null,"", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+  			  HashUniprot.get(featToAdd.getNum()).setContentType("text/html");
+  			  HashUniprot.get(featToAdd.getNum()).setBackground(Color.WHITE);
+  		  }
+  	  }
+  	  //numFT=HashUniprot.size();
+  	  //FeaturePane = new JPanel();
+	  FeaturePane.repaint();
+	  //FeaturePane.setBorder(new EmptyBorder(0, 0, 0, 0));
+  	  update_size();
+  	  int iterFTNum=1;
+  	  gui.VisualizeFrame.this.contentPane.remove(FeaturePane);
+  	  for (JTextPane txtPaneToAdd: HashUniprot.values()){
+  		  if ((iterFTNum>(numPage-1)*maxFTbyPage)&&(iterFTNum<=(numPage)*maxFTbyPage)){
+  			  gui.VisualizeFrame.this.FeaturePane.add(txtPaneToAdd);
+  		  }
+  		  iterFTNum++;
+  	  }
+  	  gui.VisualizeFrame.this.contentPane.add(FeaturePane);
+    }
+	
+	public void setPageFT(int input_numFT){
+		numFT=input_numFT;
+		maxFTbyPage=(int) (heightFTPane/(myFONT.getHeight()+10));
+		totPage=(numFT/maxFTbyPage)+1;
+		txtFeaturePageOn.setText("Features: page "+numPage+"/"+totPage+" ("+maxFTbyPage+" FT/page) ");
+	}
+	
+	
 	
 	public void Set_txtpnAln_Start(int slide_start){
 		start=slide_start;
@@ -99,10 +150,18 @@ public class VisualizeFrame extends JFrame {
 			txtpnSelection.setToolTipText(selection.currentToolTip);
 			txtpnSelection.setDocument(selection.getSelectedHTML(start, viewSize, seqType,htmlEditorKit_selection));
 			//txtpnUniprot.setText(featureFile.getHTML(start, viewSize, seqType));
-			for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
-				HashUniprot.get(NumTxtPaneToAdd).setText(featureFile.getHTML(start, viewSize, seqType,NumTxtPaneToAdd));
-				HashUniprot.get(NumTxtPaneToAdd).setToolTipText(featureFile.getToolTipText(NumTxtPaneToAdd));
+			if (seqType.equals("Amino acids")){
+				for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
+					HashUniprot.get(NumTxtPaneToAdd).setText(featureFile.getHTML(start, viewSize-1, seqType,NumTxtPaneToAdd));
+					HashUniprot.get(NumTxtPaneToAdd).setToolTipText(featureFile.getToolTipText(NumTxtPaneToAdd));
+				}
+			}else{
+				for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
+					HashUniprot.get(NumTxtPaneToAdd).setText(featureFile.getHTML(start, viewSize, seqType,NumTxtPaneToAdd));
+					HashUniprot.get(NumTxtPaneToAdd).setToolTipText(featureFile.getToolTipText(NumTxtPaneToAdd));
+				}
 			}
+			
 			slideStartLab.setText("Start "+(start+1));
 			slideEndLab.setText("End "+(start+viewSize+1));
 		}
@@ -110,6 +169,7 @@ public class VisualizeFrame extends JFrame {
 	
 	public void update_size(){
 		windowWidth=this.getWidth();
+		windowHeight=this.getHeight();
 		ctrlWidth=windowWidth-10;
 		ctrlHeight=windowHeight-10;
 		slideEndLab.setBounds(legendSize+285, 10, 80, 20);
@@ -118,7 +178,6 @@ public class VisualizeFrame extends JFrame {
 		btnUpdateUniprot.setBounds(510, 10, 229, 23);
 		AvailViewSize=ctrlWidth-15-legendSize;
 		viewSize=(int)(AvailViewSize/myFONT.getWidth());
-		
 		//viewSize=(int)(AvailViewSize/(Long.parseLong(GENETEST)));
 		Integer alnWidth=txtpnAln.getPreferredSize().width;
 		txtpnRefPos.setBounds(legendSize+5, 60, alnWidth, 20);
@@ -130,9 +189,17 @@ public class VisualizeFrame extends JFrame {
 		txtpnSelection.setBounds(legendSize+5, 80+aln.getHeight(), alnWidth, 20);
 		//txtpnUniprot.setBounds();
 		iterPos=0;
+		startFeature=(int) (80+aln.getHeight()+myFONT.getHeight())+1;
+		FeaturePane.setBounds(legendSize,startFeature,alnWidth+10,(int) (HashUniprot.size()*(10.0+myFONT.getHeight())));
+		int iterFTNum=1;
+		heightFTPane=ctrlHeight-startFeature-10;
+		this.setPageFT(HashUniprot.size());
 		for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
-			HashUniprot.get(NumTxtPaneToAdd).setBounds(legendSize+5, (int) ((80+aln.getHeight()+myFONT.fontHeight)+iterPos*(myFONT.fontHeight+1)), alnWidth, (int) (0+myFONT.fontHeight));
-			iterPos+=1;
+			if ((iterFTNum>(numPage-1)*maxFTbyPage)&&(iterFTNum<=(numPage)*maxFTbyPage)){
+				HashUniprot.get(NumTxtPaneToAdd).setBounds(legendSize+5, (int) (iterPos*(myFONT.getHeight())), alnWidth+10, (int) (0+myFONT.getHeight()));
+				iterPos+=1;
+			}
+			iterFTNum++;
 		}
 		if (seqType=="Codons"){
 			slider.setMaximum(aln.getSize()-(int)(viewSize/3));
@@ -201,6 +268,10 @@ public class VisualizeFrame extends JFrame {
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		
+		FeaturePane = new JPanel();
+		FeaturePane.setBackground(Color.WHITE);
+		FeaturePane.setBorder(new EmptyBorder(0, 0, 0, 0));
 			
 		txtpnAln = new JTextPane();
 		txtpnAln.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -221,10 +292,12 @@ public class VisualizeFrame extends JFrame {
 		txtpnAlnSpecies.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		txtpnlegendSelection= new JTextPane();
+		txtpnlegendSelection.setForeground(Color.RED);
+		txtpnlegendSelection.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		txtpnlegendSelection.setContentType("text/html");
 		txtpnlegendSelection.setBackground(Color.WHITE);
 		txtpnlegendSelection.setEditable(false);
-		txtpnlegendSelection.setText("<html><div align=\"right\"><b color=\"red\">w>1</b> <b color=\"black\"> w<1</b></div></html>");
+		txtpnlegendSelection.setText("Positive seleciton");
 		txtpnlegendSelection.setBorder(new LineBorder(new Color(0, 0, 0)));
 			
 		txtpnRefPos= new JTextPane();
@@ -266,32 +339,16 @@ public class VisualizeFrame extends JFrame {
 		{  
 		        public void componentResized(ComponentEvent evt) {
 		            //Component c = (Component)evt.getSource();
+		        	numPage=1;
+			    	updateFT();
 		        	update_size();
 		        }
 		});
 		btnUpdateUniprot = new JButton("Uniprot: update selection");
 		btnUpdateUniprot.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
-		    	  featureFile.availableType=featSelect.UpdateAvailableType();
-		    	  // remove all JTextPane
-		    	  for (JTextPane featTextPaneToRemove : HashUniprot.values()){
-		    		  gui.VisualizeFrame.this.contentPane.remove(featTextPaneToRemove);
-		    	  }
-		    	  // re-initiate HashUniprot
-		    	  HashUniprot= new HashMap<Integer,JTextPane>();
-		    	  // 
-		    	  for (feature featToAdd: featureFile.featureArray){
-		    		  if (featToAdd.isSelected(featureFile.availableType)){
-		    			  HashUniprot.put(featToAdd.getNum(), new JTextPane());
-		    			  HashUniprot.get(featToAdd.getNum()).setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		    			  HashUniprot.get(featToAdd.getNum()).setContentType("text/html");
-		    			  HashUniprot.get(featToAdd.getNum()).setBackground(Color.WHITE);
-		    		  }
-		    	  }
-		    	  update_size();
-		    	  for (JTextPane txtPaneToAdd: HashUniprot.values()){
-		    		  gui.VisualizeFrame.this.contentPane.add(txtPaneToAdd);
-		    	  }
+		      	  numPage=1;
+		    	  updateFT();
 		      }
 		    });
 		HashUniprot= new HashMap<Integer,JTextPane>();
@@ -306,7 +363,36 @@ public class VisualizeFrame extends JFrame {
 		contentPane.add(slideStartLab);
 		contentPane.add(btnUpdateUniprot);
 		contentPane.add(txtpnlegendSelection);
+		contentPane.add(FeaturePane);
 		contentPane.setLayout(null);
+		
+		txtFeaturePageOn.setText("Features: page ##/## (## features by page) ");
+		txtFeaturePageOn.setBounds(160, 36, 200, 23);
+		contentPane.add(txtFeaturePageOn);
+		txtFeaturePageOn.setColumns(10);
+		
+		JButton buttonNextFT = new JButton(">");
+		buttonNextFT.setBounds(364, 36, 41, 23);
+		contentPane.add(buttonNextFT);
+		buttonNextFT.addActionListener(new ActionListener() {
+		      public void actionPerformed(ActionEvent ae) {
+		    	  if (numPage<totPage){
+		    		  numPage++;
+		    		  updateFT();
+		    	  }
+		      }
+		});   
+		JButton buttonBeforeFT = new JButton("<");
+		buttonBeforeFT.setBounds(115, 36, 41, 23);
+		contentPane.add(buttonBeforeFT);
+		buttonBeforeFT.addActionListener(new ActionListener() {
+		      public void actionPerformed(ActionEvent ae) {
+		    	  if (numPage>1){
+		    		  numPage--;
+		    		  updateFT();
+		    	  }
+		      }
+		});
 		
 		featSelect = new gui.featureSelect(featureFile,frametitle);
 		featSelect.setVisible(true);
