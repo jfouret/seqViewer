@@ -12,7 +12,7 @@ public class myFONT {
 		if (tools.OSvalidator.isWindows() | tools.OSvalidator.isMac()){
 			return 10.15;
 		}else{
-			return 10.0;
+			return 10.15;
 		}
 	}
 	
@@ -20,7 +20,7 @@ public class myFONT {
 		if (tools.OSvalidator.isWindows() | tools.OSvalidator.isMac()){
 			return 21.0;
 		}else{
-			return 25.10;
+			return 20.0;
 		}
 	}
 	

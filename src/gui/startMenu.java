@@ -107,7 +107,7 @@ public class startMenu extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnLoadGene = new JButton("Load folder");
+		JButton btnLoadGene = new JButton("Load");
 		JButton btnDefaultFolder = new JButton("Set default folder");
 		btnDefaultFolder.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		
@@ -247,14 +247,12 @@ public class startMenu extends JFrame {
 		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTitle.setBounds(5, 5, 420, 44);
 		contentPane.add(lblTitle);
-		
-		
-		
+				
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html style=\"font-family: Monospace;\"> Author : Julien FOURET<br> Version 1.3.2 </html>");
-		txtpnHuh.setBounds(264, 298, 156, 49);
+		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 1.3.4 </div></html>");
+		txtpnHuh.setBounds(237, 298, 197, 54);
 		contentPane.add(txtpnHuh);
 		
 		JLabel lblRefseqId = new JLabel("RefSeq ID :");

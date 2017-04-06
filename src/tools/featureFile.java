@@ -43,6 +43,9 @@ public class featureFile {
 			if (split[0].equals("FT")){
 				//System.out.println(currentLine+" class :"+split[1]);
 				if (featType.isClass(split[1])){
+					if (split[3].equals("?")){
+						split[3]=split[2];
+					}
 					if (split.length==5){
 						featureArrayList.add(new feature(split[1],Integer.parseInt(split[2])-1, Integer.parseInt(split[3]),split[4],featType,positions,iterNum));
 					}else{

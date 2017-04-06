@@ -367,12 +367,12 @@ public class VisualizeFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		txtFeaturePageOn.setText("Features: page ##/## (## features by page) ");
-		txtFeaturePageOn.setBounds(160, 36, 200, 23);
+		txtFeaturePageOn.setBounds(177, 36, 200, 23);
 		contentPane.add(txtFeaturePageOn);
 		txtFeaturePageOn.setColumns(10);
 		
 		JButton buttonNextFT = new JButton(">");
-		buttonNextFT.setBounds(364, 36, 41, 23);
+		buttonNextFT.setBounds(386, 36, 53, 23);
 		contentPane.add(buttonNextFT);
 		buttonNextFT.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
@@ -383,7 +383,7 @@ public class VisualizeFrame extends JFrame {
 		      }
 		});   
 		JButton buttonBeforeFT = new JButton("<");
-		buttonBeforeFT.setBounds(115, 36, 41, 23);
+		buttonBeforeFT.setBounds(115, 36, 53, 23);
 		contentPane.add(buttonBeforeFT);
 		buttonBeforeFT.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {

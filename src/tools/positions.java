@@ -117,10 +117,5 @@ public class positions {
 	}
 	public boolean[] getBlocks(){
 		return(Cblocks);
-		
 	}
-	
-	
-	
-
 }
