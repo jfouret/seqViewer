@@ -1,4 +1,4 @@
-package tools;
+package evolution;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +8,7 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+
 import tools.myFONT;
 
 public class pamlFile extends File {
@@ -23,7 +24,7 @@ public class pamlFile extends File {
 	
 	private static final long serialVersionUID = 1361747962180404066L;
 	
-	public pamlFile(String arg0,tools.positions positions) throws FileNotFoundException {
+	public pamlFile(String arg0,evolution.positions positions) throws FileNotFoundException {
 		super(arg0);
 		int blockPos;
 		String[] split;

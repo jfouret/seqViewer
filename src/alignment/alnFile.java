@@ -1,7 +1,7 @@
 /**
  * 
  */
-package tools;
+package alignment;
 
 import java.io.File;
 import java.io.FileNotFoundException;

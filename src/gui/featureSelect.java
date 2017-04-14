@@ -4,7 +4,9 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import tools.featureFile;
+
+import features.featureFile;
+
 import javax.swing.JCheckBox;
 import java.awt.Canvas;
 import java.awt.Color;

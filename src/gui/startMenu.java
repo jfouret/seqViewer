@@ -52,7 +52,7 @@ public class startMenu extends JFrame {
 	String namePath = new String();
 	String WorkDir = ".";
 	String genCodeChoice = "standard";
-	tools.nameFile nameFile;
+	database.nameFile nameFile;
 	private JTextField txtGenename;
 	private JTextField textRefSeq;
 	private JTextField textUniProt;
@@ -81,7 +81,7 @@ public class startMenu extends JFrame {
 			}
 		}
 		try {
-			nameFile= new tools.nameFile(namePath);
+			nameFile= new database.nameFile(namePath);
 			textRefSeq.setText(nameFile.getRefSeq());
 			textUniProt.setText(nameFile.getUniprot());
 			textkgID.setText(nameFile.getKgID());
@@ -173,7 +173,7 @@ public class startMenu extends JFrame {
 		      public void actionPerformed(ActionEvent ae) {
 		          String alignmentPath = startMenu.this.alignmentPath;
 		          String speciesPath = startMenu.this.speciesPath;
-		          tools.genCode chosenGenCode= new tools.genCode(startMenu.this.genCodeChoice);
+		          alignment.genCode chosenGenCode= new alignment.genCode(startMenu.this.genCodeChoice);
 		          String seqType= startMenu.this.seqTypeBox.getSelectedItem().toString();
 		          try{
 		        	  gui.VisualizeFrame VisualizeFrame = new gui.VisualizeFrame(alignmentPath,speciesPath,pamlPath,positionsPath,uniprotPath,chosenGenCode,seqType,txtGenename.getText(),nameFile.getUniprot());

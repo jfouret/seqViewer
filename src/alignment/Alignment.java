@@ -1,8 +1,10 @@
 /**
  * 
  */
-package tools;
+package alignment;
 import java.util.*;
+
+import evolution.Species;
 import tools.myFONT;
 
 /**
@@ -18,7 +20,7 @@ public class Alignment {
 	private int codLen ; 
 	private HashMap<Character,String> colorAA = new HashMap<Character,String>();
 	private HashMap<Character,String> colorNucl = new HashMap<Character,String>();
-	private tools.htmlBlock htmlTextMap ;
+	private alignment.htmlBlock htmlTextMap ;
 	private genCode geneticCode ;
 	private HashMap<String,String> Sequences ;
 	private HashMap<String,char[]> nuclText  = new HashMap<String,char[]>(); 
@@ -85,18 +87,18 @@ public class Alignment {
 		 */
 		//String formattedAlignment = "<html><div style=\"font-family: 'Lucida Console', Courier, monospace;font-size:13px;\">";
 		if (colType=="Nucleotids"){
-			htmlTextMap = new tools.htmlBlock(nuclLen);
+			htmlTextMap = new alignment.htmlBlock(nuclLen);
 			//System.out.println("OK entering the if statement");
 			htmlTextMap.addALNChar(species, nuclText, colorNucl);
 		}else if (colType=="Amino acids"){
-			htmlTextMap = new tools.htmlBlock(codLen);
+			htmlTextMap = new alignment.htmlBlock(codLen);
 			htmlTextMap.addALNChar(species, aaText, colorAA);
 		} if (colType=="Codons"){
-			htmlTextMap = new tools.htmlBlock(codLen);
+			htmlTextMap = new alignment.htmlBlock(codLen);
 			htmlTextMap.addALNString(species, codText, geneticCode.getColorCodons(colorAA));
 		}
 	}
-	public tools.htmlBlock getHtmlBlock(){
+	public alignment.htmlBlock getHtmlBlock(){
 		return(htmlTextMap);
 	}
 	public int getHeight(){

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package tools;
+package alignment;
 
 import java.util.HashMap;
 

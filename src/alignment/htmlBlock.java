@@ -1,7 +1,8 @@
-package tools;
+package alignment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import tools.myFONT;
 
 public class htmlBlock {
@@ -22,7 +23,7 @@ public class htmlBlock {
 		arrayHTML = new HashMap<String,String[]>();
 	}
 	
-	public String getHTMLSpecies(tools.Species species){
+	public String getHTMLSpecies(evolution.Species species){
 		ArrayList<String> backgroundList = species.getBackground();
 		ArrayList<String> foregroundList = species.getForeground();
 		StringBuilder builder = new StringBuilder();
@@ -37,7 +38,7 @@ public class htmlBlock {
 		return(builder.toString());
 	}
 	
-	public String getHTML(int start,int size,tools.Species species){
+	public String getHTML(int start,int size,evolution.Species species){
 		ArrayList<String> backgroundList = species.getBackground();
 		ArrayList<String> foregroundList = species.getForeground();
 		ArrayList<String> speciesList=new ArrayList<String>();
@@ -58,7 +59,7 @@ public class htmlBlock {
 		return(builder.toString());
 	}
 	
-	public void addALNChar(tools.Species species, HashMap<String,char[]> letterText, HashMap<Character,String> letterColor ){
+	public void addALNChar(evolution.Species species, HashMap<String,char[]> letterText, HashMap<Character,String> letterColor ){
 		// When sequences are stored in char
 		ArrayList<String> backgroundList = species.getBackground();
 		ArrayList<String> foregroundList = species.getForeground();
@@ -90,7 +91,7 @@ public class htmlBlock {
 		}
 		System.out.println(nLine);
 	}
-	public void addALNString(tools.Species species, HashMap<String,String[]> letterText, HashMap<String,String> letterColor ){
+	public void addALNString(evolution.Species species, HashMap<String,String[]> letterText, HashMap<String,String> letterColor ){
 		// When sequences are stored in char
 		ArrayList<String> backgroundList = species.getBackground();
 		ArrayList<String> foregroundList = species.getForeground();

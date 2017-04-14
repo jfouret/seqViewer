@@ -1,7 +1,10 @@
-package tools;
+package features;
 
 import java.util.Arrays;
 import java.util.HashMap;
+
+import evolution.positions;
+import tools.myCST;
 
 public class feature {
 	private int Num ; //number id of the feature

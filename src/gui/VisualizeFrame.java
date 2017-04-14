@@ -21,7 +21,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.text.html.HTMLEditorKit;
-import tools.feature;
+
+import features.feature;
 import tools.myFONT;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
@@ -30,18 +31,18 @@ import java.awt.Font;
 
 public class VisualizeFrame extends JFrame {
 	
-	private tools.Alignment aln;
+	private alignment.Alignment aln;
 	private String seqType;
 	private String frametitle;
-	private tools.Species species;
-	private tools.featureFile featureFile;
+	private evolution.Species species;
+	private features.featureFile featureFile;
 	
-	tools.positions positions;
+	evolution.positions positions;
 	// private String pamlPath= "./out";
 	// private String SpeciesPath= "./species.txt";
 	// private String alnPath= "./codon_aln.fa";
 	// private String positionsPath= "./posDict.tab";
-	tools.pamlFile selection;
+	evolution.pamlFile selection;
 	private int iterPos;
 	private int viewSize=61;
 	private int start=0;
@@ -217,16 +218,16 @@ public class VisualizeFrame extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public VisualizeFrame(String alignmentPath, String speciesPath,String pamlPath,String positionsPath,String uniprotPath,tools.genCode genCode,String input_seqType,String geneName, String UniprotID) throws FileNotFoundException {
-		tools.UniprotWebFasta webFasta;	
+	public VisualizeFrame(String alignmentPath, String speciesPath,String pamlPath,String positionsPath,String uniprotPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID) throws FileNotFoundException {
+		database.UniprotWebFasta webFasta;	
 		frametitle=geneName + " - " + input_seqType;
 		//GENETEST=geneName;
 		setTitle(frametitle);
 		seqType=input_seqType;
-		tools.alnFile alnFile= new tools.alnFile(alignmentPath);
-		aln= new tools.Alignment(alnFile.readALN(),genCode);
+		alignment.alnFile alnFile= new alignment.alnFile(alignmentPath);
+		aln= new alignment.Alignment(alnFile.readALN(),genCode);
 		try {
-			webFasta = new tools.UniprotWebFasta("http://www.uniprot.org/uniprot/"+UniprotID+".fasta");
+			webFasta = new database.UniprotWebFasta("http://www.uniprot.org/uniprot/"+UniprotID+".fasta");
 			//System.out.println(aln.getSeqRef());
 			//System.out.println(webFasta.getSeq());
 			if (!aln.getSeqRef().startsWith(webFasta.getSeq())){
@@ -244,19 +245,19 @@ public class VisualizeFrame extends JFrame {
     		        JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		tools.speciesFile speciesFile=new tools.speciesFile(speciesPath);
+		evolution.speciesFile speciesFile=new evolution.speciesFile(speciesPath);
 		species= speciesFile.readSpecies();
 		aln.format(seqType, species);
-		positions= new tools.positions(positionsPath,aln.getSize(),seqType);
-		selection = new tools.pamlFile(pamlPath,positions);
+		positions= new evolution.positions(positionsPath,aln.getSize(),seqType);
+		selection = new evolution.pamlFile(pamlPath,positions);
 		//featureFile = new tools.featureFile(uniprotPath,positions);
 		try {
-			featureFile = new tools.featureFile(new URL("http://www.uniprot.org/uniprot/"+UniprotID+".txt"),positions);
+			featureFile = new features.featureFile(new URL("http://www.uniprot.org/uniprot/"+UniprotID+".txt"),positions);
 		} catch (MalformedURLException e) {
-			featureFile = new tools.featureFile(uniprotPath,positions);
+			featureFile = new features.featureFile(uniprotPath,positions);
 			e.printStackTrace();
 		} catch (IOException e) {
-			featureFile = new tools.featureFile(uniprotPath,positions);
+			featureFile = new features.featureFile(uniprotPath,positions);
 			e.printStackTrace();
 		}
 		htmlEditorKit_selection=selection.buildSelectedHTML(aln.getSize(),seqType);
