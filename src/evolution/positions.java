@@ -17,25 +17,29 @@ public class positions {
 	
 	//foo.toArray(new Integer[.size()]);
 	
-	public void buildExonsHTML(){
+	public String buildExonsHTML(){
 		exonsHTML=new String[exons.length];
+		StringBuilder builder = new StringBuilder();
+		builder.append("<html><span>");
 		double test0;
 		for (int i=0;i<exons.length;i+=1){
 			test0=Integer.parseInt(exons[i]) % 2;
 			//System.out.println(test0);
 			if (test0==0){
 				//System.out.println("EVEN");
-				exonsHTML[i]="<b style=\"color: #A52A2A;\">"+tools.myCST.BLOCK+"</b>";
+				builder.append("<b style=\"color: #A52A2A;\">"+tools.myCST.BLOCK+"</b>");
 			}else{
 				//System.out.println("ODD");
-				exonsHTML[i]="<b style=\"color: #DEB887;\">"+tools.myCST.BLOCK+"</b>";
+				builder.append("<b style=\"color: #DEB887;\">"+tools.myCST.BLOCK+"</b>");
 			}
 		}
+		builder.append("</span></html>");
+		return builder.toString();
 	}
 	
 	public String getExonHTML(int start,int size,String seqType){
 		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.fontSize+";\">");
+		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.getFontSize()+"px;\">");
 		for (int i=start;(i<exons.length)&&(i<=start+size);i+=1){
 			if (seqType=="Amino acids"){
 				builder.append(exonsHTML[(int)(i*3)]);
@@ -95,8 +99,8 @@ public class positions {
 		ref2aln=Tref2aln.toArray(new Integer[Tref2aln.size()]);
 		block2aln=Tblock2aln.toArray(new Integer[Tblock2aln.size()]);
 		sc.close();
-		buildExonsHTML();
 	}
+	
 	// Default pos is aln
 	public int getPosFromRef(int refPos){
 		return(ref2aln[refPos]);

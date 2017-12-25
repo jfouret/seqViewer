@@ -105,7 +105,12 @@ public class Alignment {
 		double height = htmlTextMap.getNLine()*myFONT.getHeight();
 		return((int)height+1);
 	}
+	
 	public int getSize(){
 		return(htmlTextMap.getNCol());
+	}
+	public int getWidth(){
+		double width = htmlTextMap.getNCol()*myFONT.getWidth();
+		return((int)width+1);
 	}
 }

@@ -3,8 +3,6 @@ package alignment;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import tools.myFONT;
-
 public class htmlBlock {
 	private int nCol ;
 	private int nLine = 0; 
@@ -27,14 +25,14 @@ public class htmlBlock {
 		ArrayList<String> backgroundList = species.getBackground();
 		ArrayList<String> foregroundList = species.getForeground();
 		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.fontSize+"; text-align: right;\">");
+		builder.append("<html><span style=\"text-align: right;\">");
 		for (String s: backgroundList ) {
 			builder.append("<b>"+s+tools.myCST.STARTARROW+"</b><br>");
 		}
 		for (String s: foregroundList ) {
 			builder.append("<b style=\"color : red;\">"+s+tools.myCST.STARTARROW+"</b><br>");
 		}
-		builder.append("</div></html>");
+		builder.append("</span></html>");
 		return(builder.toString());
 	}
 	
@@ -45,7 +43,7 @@ public class htmlBlock {
 		speciesList.addAll(backgroundList); // add first arraylist
 		speciesList.addAll(foregroundList); // add Second arraylist
 		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.fontSize+";\">");
+		builder.append("<html><span >");
 		for (String s: speciesList ) {
 		//for (HashMap.Entry<String, String[]> entry : arrayHTML.entrySet()) {
 			//System.out.println("SPECIES:"+entry.getKey());
@@ -55,7 +53,28 @@ public class htmlBlock {
 			}
 		    builder.append("<br>");
 		}
-		builder.append("</div></html>");
+		builder.append("</span></html>");
+		return(builder.toString());
+	}
+	
+	public String getHTML(evolution.Species species){
+		ArrayList<String> backgroundList = species.getBackground();
+		ArrayList<String> foregroundList = species.getForeground();
+		ArrayList<String> speciesList=new ArrayList<String>();
+		speciesList.addAll(backgroundList); // add first arraylist
+		speciesList.addAll(foregroundList); // add Second arraylist
+		StringBuilder builder = new StringBuilder();
+		builder.append("<html><span >");
+		for (String s: speciesList ) {
+		//for (HashMap.Entry<String, String[]> entry : arrayHTML.entrySet()) {
+			//System.out.println("SPECIES:"+entry.getKey());
+		    String[] htmlArray = arrayHTML.get(s);
+		    for (int i=0;(i<htmlArray.length);i+=1){
+			    builder.append(htmlArray[i]);
+			}
+		    builder.append("<br>");
+		}
+		builder.append("</span></html>");
 		return(builder.toString());
 	}
 	

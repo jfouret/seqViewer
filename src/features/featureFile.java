@@ -106,7 +106,7 @@ public class featureFile {
 	
 	public String getHTML(int start,int size,String input_seq_type,int input_num){
 		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.fontSize+";\">");
+		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.getFontSize()+"px;\">");
 		
 		feature feat=featureArray[input_num];
 				builder.append(feat.getHTML_line(start,size,input_seq_type));
@@ -114,7 +114,7 @@ public class featureFile {
 		return(builder.toString());
 	}
 	public long getHeight(){
-		return(featureArray.length*myFONT.fontHeight);
+		return(featureArray.length*myFONT.getFontSize());
 	}
 	
 	public String getToolTipText(Integer input_num){

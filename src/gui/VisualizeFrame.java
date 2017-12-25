@@ -2,11 +2,17 @@ package gui;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 import javax.swing.JSlider;
 import javax.swing.event.*;
@@ -20,14 +26,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import javax.swing.text.html.HTMLEditorKit;
-
 import features.feature;
 import tools.myFONT;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JTextField;
 import java.awt.Font;
+
+import javax.swing.SwingConstants;
 
 public class VisualizeFrame extends JFrame {
 	
@@ -48,7 +54,6 @@ public class VisualizeFrame extends JFrame {
 	private int start=0;
 	private int legendSize=110;
 	private int startFeature;
-	private HTMLEditorKit htmlEditorKit_selection = new HTMLEditorKit();
 	
 	// Dimensions
 	int windowWidth;
@@ -62,15 +67,18 @@ public class VisualizeFrame extends JFrame {
 	int numPage=1;
 	int heightFTPane;
 	
+	
 	private static final long serialVersionUID = 3034391181248326868L;
 	private JPanel contentPane;
 	private JPanel FeaturePane;
-	private JTextPane txtpnAln;
+	private JLabel txtpnAln;
 	private HashMap<Integer,JTextPane> HashUniprot;
 	//private JTextPane txtpnUniprot;
-	private JTextPane txtpnAlnSpecies;
+	private JLabel txtpnAlnSpecies;
+	private JScrollPane scrolledTxtpnAln;
 	private JTextPane txtpnRefPos;
-	private JTextPane txtpnSelection;
+	private JLabel txtpnSelection;
+	private JScrollPane scrolledTxtpnSelection;
 	private JTextPane txtpnlegendSelection;
 	private JSlider slider;
 	private Label slideEndLab;
@@ -120,22 +128,31 @@ public class VisualizeFrame extends JFrame {
 	
 	public void setPageFT(int input_numFT){
 		numFT=input_numFT;
-		maxFTbyPage=(int) (heightFTPane/(myFONT.getHeight()+10));
+		maxFTbyPage=(int) (heightFTPane/(myFONT.getFontSize()+10));
 		totPage=(numFT/maxFTbyPage)+1;
 		txtFeaturePageOn.setText("Features: page "+numPage+"/"+totPage+" ("+maxFTbyPage+" FT/page) ");
 	}
 	
-	
-	
-	public void Set_txtpnAln_Start(int slide_start){
-		start=slide_start;
-		update_slider();
+	public void Set_scroll_Start(int slide_start){
+		JScrollBar NewScroll= scrolledTxtpnAln.getHorizontalScrollBar();
+		double charwidth = tools.myFONT.getWidth();
+		if (Math.abs(slide_start-NewScroll.getValue())>=tools.myFONT.getWidth()) {
+			start=(int) (slide_start/charwidth);
+			NewScroll.setValue((int) (slide_start-slide_start%tools.myFONT.getWidth()));
+			NewScroll.setSize(0, 0);
+			scrolledTxtpnAln.setHorizontalScrollBar(NewScroll);
+			scrolledTxtpnSelection.setHorizontalScrollBar(NewScroll);
+			slideStartLab.setText("Start "+(start+1));
+			slideEndLab.setText("End "+(start+viewSize+1));
+		}
 	}
 	
 	public void update_slider(){
+		
+		
+		/***
 		if  (seqType=="Codons"){
 			txtpnRefPos.setText(positions.getExonHTML(start, (int)(viewSize/3)-1,seqType));
-			txtpnAln.setText(aln.getHtmlBlock().getHTML(start, (int)(viewSize/3)-1,species));
 			txtpnSelection.setDocument(selection.getSelectedHTML(start, (int)(viewSize/3)-1, seqType,htmlEditorKit_selection));
 			txtpnSelection.setToolTipText(selection.currentToolTip);
 			//txtpnUniprot.setText(featureFile.getHTML(3*start, 3*(int)(viewSize/3)-1, seqType));
@@ -147,9 +164,7 @@ public class VisualizeFrame extends JFrame {
 			slideEndLab.setText("End "+(start+(int)(viewSize/3)));
 		}else{
 			txtpnRefPos.setText(positions.getExonHTML(start, viewSize,seqType));
-			txtpnAln.setText(aln.getHtmlBlock().getHTML(start, viewSize,species));
-			txtpnSelection.setToolTipText(selection.currentToolTip);
-			txtpnSelection.setDocument(selection.getSelectedHTML(start, viewSize, seqType,htmlEditorKit_selection));
+			//txtpnAln.setText(aln.getHtmlBlock().getHTML(start, viewSize,species));
 			//txtpnUniprot.setText(featureFile.getHTML(start, viewSize, seqType));
 			if (seqType.equals("Amino acids")){
 				for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
@@ -166,6 +181,9 @@ public class VisualizeFrame extends JFrame {
 			slideStartLab.setText("Start "+(start+1));
 			slideEndLab.setText("End "+(start+viewSize+1));
 		}
+		***/
+		slideStartLab.setText("Start "+(start+1));
+		slideEndLab.setText("End "+(start+viewSize+1));
 	}
 	
 	public void update_size(){
@@ -173,41 +191,28 @@ public class VisualizeFrame extends JFrame {
 		windowHeight=this.getHeight();
 		ctrlWidth=windowWidth-10;
 		ctrlHeight=windowHeight-10;
-		slideEndLab.setBounds(legendSize+285, 10, 80, 20);
-		slideStartLab.setBounds(legendSize+5, 10, 80, 20);
-		slider.setBounds(legendSize+85, 10, 200, 20);
-		btnUpdateUniprot.setBounds(510, 10, 229, 23);
 		AvailViewSize=ctrlWidth-15-legendSize;
 		viewSize=(int)(AvailViewSize/myFONT.getWidth());
-		//viewSize=(int)(AvailViewSize/(Long.parseLong(GENETEST)));
-		Integer alnWidth=txtpnAln.getPreferredSize().width;
+		int alnWidth=(int)AvailViewSize;
 		txtpnRefPos.setBounds(legendSize+5, 60, alnWidth, 20);
-		txtpnAlnSpecies.setBounds(5, 80, legendSize-5, aln.getHeight());
-		//txtpnAln.setBounds(legendSize+5, 80, (int) (viewSize*myFONT.getWidth()), aln.getHeight());
-		//txtpnAln.setBounds(legendSize+5, 80, (int) (viewSize*(Long.parseLong(GENETEST))), aln.getHeight());
-		txtpnAln.setBounds(legendSize+5, 80,alnWidth , aln.getHeight());
+		scrolledTxtpnAln.setBounds(legendSize+5, 80,alnWidth , aln.getHeight());
 		txtpnlegendSelection.setBounds(5,80+aln.getHeight(),legendSize-5,20);
-		txtpnSelection.setBounds(legendSize+5, 80+aln.getHeight(), alnWidth, 20);
+		scrolledTxtpnSelection.setBounds(legendSize+5, 80+aln.getHeight(), alnWidth, 20);
 		//txtpnUniprot.setBounds();
 		iterPos=0;
-		startFeature=(int) (80+aln.getHeight()+myFONT.getHeight())+1;
-		FeaturePane.setBounds(legendSize,startFeature,alnWidth+10,(int) (HashUniprot.size()*(10.0+myFONT.getHeight())));
+		startFeature=(int) (80+aln.getHeight()+myFONT.getFontSize())+1;
+		FeaturePane.setBounds(legendSize,startFeature,alnWidth+10,(int) (HashUniprot.size()*(10.0+myFONT.getFontSize())));
 		int iterFTNum=1;
 		heightFTPane=ctrlHeight-startFeature-10;
 		this.setPageFT(HashUniprot.size());
 		for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
 			if ((iterFTNum>(numPage-1)*maxFTbyPage)&&(iterFTNum<=(numPage)*maxFTbyPage)){
-				HashUniprot.get(NumTxtPaneToAdd).setBounds(legendSize+5, (int) (iterPos*(myFONT.getHeight())), alnWidth+10, (int) (0+myFONT.getHeight()));
+				HashUniprot.get(NumTxtPaneToAdd).setBounds(legendSize+5, (int) (iterPos*(myFONT.getFontSize())), alnWidth+10, (int) (0+myFONT.getFontSize()));
 				iterPos+=1;
 			}
 			iterFTNum++;
 		}
-		if (seqType=="Codons"){
-			slider.setMaximum(aln.getSize()-(int)(viewSize/3));
-		}else{
-			slider.setMaximum(aln.getSize()-viewSize-1);
-		}
-		update_slider();
+		slider.setMaximum(scrolledTxtpnAln.getHorizontalScrollBar().getMaximum());
 	}
 	
 	public void changeAvailableType(String type_id, Boolean boxChecked){
@@ -216,6 +221,7 @@ public class VisualizeFrame extends JFrame {
 	
 	/**
 	 * Create the frame.
+	 * @param scrolledTxtpnSelection 
 	 */
 	
 	public VisualizeFrame(String alignmentPath, String speciesPath,String pamlPath,String positionsPath,String uniprotPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID) throws FileNotFoundException {
@@ -260,7 +266,6 @@ public class VisualizeFrame extends JFrame {
 			featureFile = new features.featureFile(uniprotPath,positions);
 			e.printStackTrace();
 		}
-		htmlEditorKit_selection=selection.buildSelectedHTML(aln.getSize(),seqType);
 		windowWidth=800;
 		windowHeight=600;
 		
@@ -273,24 +278,34 @@ public class VisualizeFrame extends JFrame {
 		FeaturePane = new JPanel();
 		FeaturePane.setBackground(Color.WHITE);
 		FeaturePane.setBorder(new EmptyBorder(0, 0, 0, 0));
-			
-		txtpnAln = new JTextPane();
-		txtpnAln.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		txtpnAln.setContentType("text/html");
+		txtpnAln = new JLabel();
+		txtpnAln.setVerticalAlignment(SwingConstants.TOP);
+		txtpnAln.setBorder(null);
 		txtpnAln.setBackground(Color.WHITE);
-		txtpnAln.setEditable(false);
+		//if (seqType=="codon") {
+		//	txtpnAln.setPreferredSize(new Dimension(3*aln.getWidth(), aln.getHeight()));
+		//}else {
+		//	txtpnAln.setPreferredSize(new Dimension(aln.getWidth(), aln.getHeight()));
+		//}
+		txtpnAln.setText(aln.getHtmlBlock().getHTML(species));
+		txtpnAln.getFontMetrics(myFONT.getFont()).getHeight();
+		txtpnAln.setFont(myFONT.getFont());
+		
+		scrolledTxtpnAln = new JScrollPane(txtpnAln);
+		scrolledTxtpnAln.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrolledTxtpnAln.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 		
 		//txtpnUniprot = new JTextPane();
 		//txtpnUniprot.setContentType("text/html");
 		//txtpnUniprot.setBackground(Color.WHITE);
 		//txtpnUniprot.setEditable(false);
 		
-		txtpnAlnSpecies= new JTextPane();
-		txtpnAlnSpecies.setContentType("text/html");
+		txtpnAlnSpecies= new JLabel();
 		txtpnAlnSpecies.setBackground(Color.WHITE);
-		txtpnAlnSpecies.setEditable(false);
+		txtpnAlnSpecies.setFont(myFONT.getFont());
 		txtpnAlnSpecies.setText(aln.getHtmlBlock().getHTMLSpecies(species));
 		txtpnAlnSpecies.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		txtpnAlnSpecies.setBounds(5, 80, legendSize-5, aln.getHeight());
 		
 		txtpnlegendSelection= new JTextPane();
 		txtpnlegendSelection.setForeground(Color.RED);
@@ -307,13 +322,16 @@ public class VisualizeFrame extends JFrame {
 		txtpnRefPos.setBackground(Color.WHITE);
 		txtpnRefPos.setEditable(false);
 		
-		txtpnSelection= new JTextPane();
+		txtpnSelection= new JLabel();
 		txtpnSelection.setBorder(new LineBorder(new Color(0, 0, 0)));
-		txtpnSelection.setContentType("text/html");
 		txtpnSelection.setBackground(Color.WHITE);
-		txtpnSelection.setEditable(false);
-		txtpnSelection.setEditorKit(htmlEditorKit_selection);
-		
+		txtpnSelection.setToolTipText(selection.currentToolTip);
+		txtpnSelection.setText(selection.buildHTML(aln.getSize(), seqType));
+		txtpnSelection.setFont(myFONT.getFont());
+		scrolledTxtpnSelection = new JScrollPane(txtpnSelection);
+		scrolledTxtpnSelection.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrolledTxtpnSelection.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
+				
 		slider = new JSlider();
 		slider.setForeground(Color.GRAY);
 		slider.setMinimum(0);
@@ -324,7 +342,7 @@ public class VisualizeFrame extends JFrame {
 		slider.addChangeListener(new ChangeListener() {
 	        @Override
 	        public void stateChanged(ChangeEvent ce) {
-	        	VisualizeFrame.this.Set_txtpnAln_Start(((JSlider) ce.getSource()).getValue());
+	        	VisualizeFrame.this.Set_scroll_Start(((JSlider) ce.getSource()).getValue());
 	        }
 	    });
 				
@@ -336,6 +354,9 @@ public class VisualizeFrame extends JFrame {
 		slideStartLab = new Label("Start: ");
 		slideStartLab.setBackground(Color.CYAN);
 
+		
+		
+		
 		this.addComponentListener(new ComponentAdapter() 
 		{  
 		        public void componentResized(ComponentEvent evt) {
@@ -353,13 +374,19 @@ public class VisualizeFrame extends JFrame {
 		      }
 		    });
 		HashUniprot= new HashMap<Integer,JTextPane>();
+		
+		slideEndLab.setBounds(legendSize+285, 10, 80, 20);
+		slideStartLab.setBounds(legendSize+5, 10, 80, 20);
+		slider.setBounds(legendSize+85, 10, 200, 20);
+		btnUpdateUniprot.setBounds(510, 10, 229, 23);
+		
 		update_size();
 		
-		contentPane.add(txtpnAln);
+		contentPane.add(scrolledTxtpnAln);
 		// NO PANE FOR UNIPROT contentPane.add(txtpnUniprot);
 		contentPane.add(txtpnAlnSpecies);
 		contentPane.add(txtpnRefPos);
-		contentPane.add(txtpnSelection);
+		contentPane.add(scrolledTxtpnSelection);
 		contentPane.add(slider);
 		contentPane.add(slideStartLab);
 		contentPane.add(btnUpdateUniprot);
