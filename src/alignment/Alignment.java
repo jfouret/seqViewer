@@ -18,24 +18,29 @@ public class Alignment {
 	 */
 	private int nuclLen ; 
 	private int codLen ; 
-	private HashMap<Character,String> colorAA = new HashMap<Character,String>();
-	private HashMap<Character,String> colorNucl = new HashMap<Character,String>();
+	private HashMap<String,String> colorAA = new HashMap<String,String>();
+	private HashMap<String,String> colorNucl = new HashMap<String,String>();
 	private alignment.htmlBlock htmlTextMap ;
 	private genCode geneticCode ;
 	private HashMap<String,String> Sequences ;
-	private HashMap<String,char[]> nuclText  = new HashMap<String,char[]>(); 
+	
+	private HashMap<String,String[]> nuclText  = new HashMap<String,String[]>(); 
 	private HashMap<String,String[]> codText = new HashMap<String,String[]>() ;
-	private HashMap<String,char[]> aaText = new HashMap<String,char[]>() ;
+	private HashMap<String,String[]> aaText = new HashMap<String,String[]>() ;
 	
 	public String getSeqRef(){
-		return ((new String(aaText.get("hg19"))).replaceAll("-", ""));
+		StringBuilder builder = new StringBuilder();
+		for (String aa : aaText.get("hg19")) {
+			builder.append(aa);
+		}
+		return (builder.toString()).replaceAll("-", "");
 	}
 	
 	public Alignment(HashMap<String,String> Input_Sequences, genCode Input_geneticCode) {
 		// initiate colors
 		//seqhg19=Input_Sequences.get("hg19").replaceAll("-", "");
-		colorAA.put('D',"E60A0A"); colorAA.put('E',"E60A0A"); colorAA.put('C',"E6E600"); colorAA.put('M',"E6E600"); colorAA.put('K',"145AFF"); colorAA.put('R',"145AFF"); colorAA.put('S',"FA9600"); colorAA.put('T',"FA9600"); colorAA.put('F',"3232AA"); colorAA.put('Y',"3232AA"); colorAA.put('N',"00DCDC"); colorAA.put('Q',"00DCDC"); colorAA.put('G',"EBEBEB"); colorAA.put('V',"0F820F"); colorAA.put('I',"0F820F"); colorAA.put('L',"0F820F"); colorAA.put('A',"C8C8C8"); colorAA.put('W',"B45AB4"); colorAA.put('H',"8282D2"); colorAA.put('P',"DC9682"); 
-		colorNucl.put('A',"145AFF");colorNucl.put('T',"E6E600");colorNucl.put('C',"0F820F");colorNucl.put('G',"E60A0A");
+		colorAA.put("D","E60A0A"); colorAA.put("E","E60A0A"); colorAA.put("C","E6E600"); colorAA.put("M","E6E600"); colorAA.put("K","145AFF"); colorAA.put("R","145AFF"); colorAA.put("S","FA9600"); colorAA.put("T","FA9600"); colorAA.put("F","3232AA"); colorAA.put("Y","3232AA"); colorAA.put("N","00DCDC"); colorAA.put("Q","00DCDC"); colorAA.put("G","EBEBEB"); colorAA.put("V","0F820F"); colorAA.put("I","0F820F"); colorAA.put("L","0F820F"); colorAA.put("A","C8C8C8"); colorAA.put("W","B45AB4"); colorAA.put("H","8282D2"); colorAA.put("P","DC9682"); 
+		colorNucl.put("A","145AFF");colorNucl.put("T","E6E600");colorNucl.put("C","0F820F");colorNucl.put("G","E60A0A");
 		geneticCode=Input_geneticCode;
 		Sequences=Input_Sequences; //wash it ...
 		nuclLen = Sequences.get(Sequences.keySet().toArray()[0]).length();
@@ -46,15 +51,15 @@ public class Alignment {
 		int posCounter = 0;
 		String codon = "";
 		String[] codArray = new String[codLen];
-		char[] aaArray = new char[codLen];
+		String[] aaArray = new String[codLen];
 		for (HashMap.Entry<String, String> entry : Sequences.entrySet()) {
 			//System.out.println("OK entering loop");
 		    species = entry.getKey();
 		    seq = entry.getValue();
 		    //System.out.println("ENTRY:"+species+"="+seq);
-		    nuclText.put(species,seq.toCharArray());
+		    nuclText.put(species,seq.split("")); //TODO test is the split is OK
 		    //System.out.println("ENTRY_length:"+nuclText.get(species).length);
-		    for ( char nucleotid : nuclText.get(species) ){
+		    for ( String nucleotid : nuclText.get(species) ){
 		    	codon+=nucleotid;
 		    	charCounter+=1;
 		    	if ((charCounter==3)  && (codon.length()==3)){
@@ -79,28 +84,59 @@ public class Alignment {
 		    codText.put(species, codArray.clone());
 		}
 	}
-	public void format(String colType,Species species){
-		/**
-		 * Pre-build the HTML code to print colored sequences aligned.
-		 * @param colType type of coloration needed: limited to three choice "Nucleotids", "Amino acids" and "Codons" 
-		 * @param species Background and Foreground species names and order in specis class
-		 */
-		//String formattedAlignment = "<html><div style=\"font-family: 'Lucida Console', Courier, monospace;font-size:13px;\">";
-		if (colType=="Nucleotids"){
-			htmlTextMap = new alignment.htmlBlock(nuclLen);
-			//System.out.println("OK entering the if statement");
-			htmlTextMap.addALNChar(species, nuclText, colorNucl);
-		}else if (colType=="Amino acids"){
-			htmlTextMap = new alignment.htmlBlock(codLen);
-			htmlTextMap.addALNChar(species, aaText, colorAA);
-		} if (colType=="Codons"){
+	
+	public String buildHTML(String seqType,Species species) {
+		int nCol;
+		HashMap<String, String> letterColor;
+		HashMap<String, String[]> letterText;
+		if (seqType=="Nucleotids"){
+			letterText=nuclText;
+			letterColor=colorNucl;
+			nCol=nuclLen;
+		}else if (seqType=="Amino acids"){
+			letterText=aaText;
+			letterColor=colorAA;
+			nCol=codLen;
+		} else {
+			letterText=codText;
+			letterColor=geneticCode.getColorCodons(colorAA);
+			nCol=codLen;
 			htmlTextMap = new alignment.htmlBlock(codLen);
 			htmlTextMap.addALNString(species, codText, geneticCode.getColorCodons(colorAA));
 		}
+		// When sequences are stored in char
+		ArrayList<String> backgroundList = species.getBackground();
+		ArrayList<String> foregroundList = species.getForeground();
+		String letter;
+		//System.out.println("OK entering the if statement");
+		StringBuilder builder = new StringBuilder();
+		builder.append("<html><span >");
+		for (String backgroundSpecies: backgroundList ) {
+			//System.out.println("OK entering the for statement on species");
+			for ( int i = 0; i < letterText.get(backgroundSpecies).length ; i+=1){	
+				//System.out.println("OK entering the for statement on letter");
+				letter=letterText.get(backgroundSpecies)[i];
+				builder.append("<b style=\"background-color: #"+letterColor.get(letter)+";\">"+letter+"</b>");
+			}
+			builder.append("<br>");
+		}
+		for (String foregroundSpecies: foregroundList ) {
+			//System.out.println("OK entering the for statement on species");
+			//for (Character letter : letterText.get(backgroundSpecies) ){
+			for (int i = 0; i < letterText.get(foregroundSpecies).length ; i+=1){	
+				//System.out.println("OK entering the for statement on letter");
+				letter=letterText.get(foregroundSpecies)[i];
+				builder.append("<u><b style=\"background-color: #"+letterColor.get(letter)+";\">"+letter+"</b></u>");
+				//System.out.println(letter+"formatted as : "+formatHTML[i]);
+			}
+			builder.append("<br>");
+		}
+		return builder.toString();
 	}
 	public alignment.htmlBlock getHtmlBlock(){
 		return(htmlTextMap);
 	}
+	
 	public int getHeight(){
 		double height = htmlTextMap.getNLine()*myFONT.getHeight();
 		return((int)height+1);

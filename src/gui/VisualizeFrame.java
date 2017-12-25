@@ -76,7 +76,8 @@ public class VisualizeFrame extends JFrame {
 	//private JTextPane txtpnUniprot;
 	private JLabel txtpnAlnSpecies;
 	private JScrollPane scrolledTxtpnAln;
-	private JTextPane txtpnRefPos;
+	private JLabel txtpnRefPos;
+	private JScrollPane scrolledTxtpnRefPos;
 	private JLabel txtpnSelection;
 	private JScrollPane scrolledTxtpnSelection;
 	private JTextPane txtpnlegendSelection;
@@ -142,48 +143,10 @@ public class VisualizeFrame extends JFrame {
 			NewScroll.setSize(0, 0);
 			scrolledTxtpnAln.setHorizontalScrollBar(NewScroll);
 			scrolledTxtpnSelection.setHorizontalScrollBar(NewScroll);
+			scrolledTxtpnRefPos.setHorizontalScrollBar(NewScroll);
 			slideStartLab.setText("Start "+(start+1));
 			slideEndLab.setText("End "+(start+viewSize+1));
 		}
-	}
-	
-	public void update_slider(){
-		
-		
-		/***
-		if  (seqType=="Codons"){
-			txtpnRefPos.setText(positions.getExonHTML(start, (int)(viewSize/3)-1,seqType));
-			txtpnSelection.setDocument(selection.getSelectedHTML(start, (int)(viewSize/3)-1, seqType,htmlEditorKit_selection));
-			txtpnSelection.setToolTipText(selection.currentToolTip);
-			//txtpnUniprot.setText(featureFile.getHTML(3*start, 3*(int)(viewSize/3)-1, seqType));
-			for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
-				HashUniprot.get(NumTxtPaneToAdd).setText(featureFile.getHTML(3*start, 3*(int)(viewSize/3)-1, seqType,NumTxtPaneToAdd));
-				HashUniprot.get(NumTxtPaneToAdd).setToolTipText(featureFile.getToolTipText(NumTxtPaneToAdd));
-			}
-			slideStartLab.setText("Start "+(start+1));
-			slideEndLab.setText("End "+(start+(int)(viewSize/3)));
-		}else{
-			txtpnRefPos.setText(positions.getExonHTML(start, viewSize,seqType));
-			//txtpnAln.setText(aln.getHtmlBlock().getHTML(start, viewSize,species));
-			//txtpnUniprot.setText(featureFile.getHTML(start, viewSize, seqType));
-			if (seqType.equals("Amino acids")){
-				for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
-					HashUniprot.get(NumTxtPaneToAdd).setText(featureFile.getHTML(start, viewSize-1, seqType,NumTxtPaneToAdd));
-					HashUniprot.get(NumTxtPaneToAdd).setToolTipText(featureFile.getToolTipText(NumTxtPaneToAdd));
-				}
-			}else{
-				for (Integer NumTxtPaneToAdd: HashUniprot.keySet()){
-					HashUniprot.get(NumTxtPaneToAdd).setText(featureFile.getHTML(start, viewSize, seqType,NumTxtPaneToAdd));
-					HashUniprot.get(NumTxtPaneToAdd).setToolTipText(featureFile.getToolTipText(NumTxtPaneToAdd));
-				}
-			}
-			
-			slideStartLab.setText("Start "+(start+1));
-			slideEndLab.setText("End "+(start+viewSize+1));
-		}
-		***/
-		slideStartLab.setText("Start "+(start+1));
-		slideEndLab.setText("End "+(start+viewSize+1));
 	}
 	
 	public void update_size(){
@@ -194,10 +157,10 @@ public class VisualizeFrame extends JFrame {
 		AvailViewSize=ctrlWidth-15-legendSize;
 		viewSize=(int)(AvailViewSize/myFONT.getWidth());
 		int alnWidth=(int)AvailViewSize;
-		txtpnRefPos.setBounds(legendSize+5, 60, alnWidth, 20);
 		scrolledTxtpnAln.setBounds(legendSize+5, 80,alnWidth , aln.getHeight());
 		txtpnlegendSelection.setBounds(5,80+aln.getHeight(),legendSize-5,20);
 		scrolledTxtpnSelection.setBounds(legendSize+5, 80+aln.getHeight(), alnWidth, 20);
+		scrolledTxtpnRefPos.setBounds(legendSize+5, 60, alnWidth, 20);
 		//txtpnUniprot.setBounds();
 		iterPos=0;
 		startFeature=(int) (80+aln.getHeight()+myFONT.getFontSize())+1;
@@ -316,16 +279,19 @@ public class VisualizeFrame extends JFrame {
 		txtpnlegendSelection.setText("Positive seleciton");
 		txtpnlegendSelection.setBorder(new LineBorder(new Color(0, 0, 0)));
 			
-		txtpnRefPos= new JTextPane();
+		txtpnRefPos= new JLabel();
 		txtpnRefPos.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		txtpnRefPos.setContentType("text/html");
 		txtpnRefPos.setBackground(Color.WHITE);
-		txtpnRefPos.setEditable(false);
+		txtpnRefPos.setText(positions.buildHTML(seqType));
+		txtpnRefPos.setFont(myFONT.getFont());
+		scrolledTxtpnRefPos = new JScrollPane(txtpnRefPos);
+		scrolledTxtpnRefPos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrolledTxtpnRefPos.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
+		
 		
 		txtpnSelection= new JLabel();
 		txtpnSelection.setBorder(new LineBorder(new Color(0, 0, 0)));
 		txtpnSelection.setBackground(Color.WHITE);
-		txtpnSelection.setToolTipText(selection.currentToolTip);
 		txtpnSelection.setText(selection.buildHTML(aln.getSize(), seqType));
 		txtpnSelection.setFont(myFONT.getFont());
 		scrolledTxtpnSelection = new JScrollPane(txtpnSelection);
@@ -353,9 +319,6 @@ public class VisualizeFrame extends JFrame {
 		
 		slideStartLab = new Label("Start: ");
 		slideStartLab.setBackground(Color.CYAN);
-
-		
-		
 		
 		this.addComponentListener(new ComponentAdapter() 
 		{  
@@ -385,7 +348,7 @@ public class VisualizeFrame extends JFrame {
 		contentPane.add(scrolledTxtpnAln);
 		// NO PANE FOR UNIPROT contentPane.add(txtpnUniprot);
 		contentPane.add(txtpnAlnSpecies);
-		contentPane.add(txtpnRefPos);
+		contentPane.add(scrolledTxtpnRefPos);
 		contentPane.add(scrolledTxtpnSelection);
 		contentPane.add(slider);
 		contentPane.add(slideStartLab);
@@ -424,7 +387,6 @@ public class VisualizeFrame extends JFrame {
 		
 		featSelect = new gui.featureSelect(featureFile,frametitle);
 		featSelect.setVisible(true);
-		
 		featSelect.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 	}
 }

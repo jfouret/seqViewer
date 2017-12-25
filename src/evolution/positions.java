@@ -4,8 +4,6 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-import tools.myFONT;
-
 public class positions {
 	private String[] exons;
 	private String[] refPos;
@@ -13,16 +11,20 @@ public class positions {
 	private Integer[] ref2aln;
 	private String[] aln2ref;
 	private Integer[] block2aln;
-	private String[] exonsHTML;
 	
 	//foo.toArray(new Integer[.size()]);
 	
-	public String buildExonsHTML(){
-		exonsHTML=new String[exons.length];
+	public String buildHTML(String seqType){
+		int iter;
+		if (seqType=="Amino acids") {
+			iter=3;
+		}else {
+			iter=1;
+		}
 		StringBuilder builder = new StringBuilder();
 		builder.append("<html><span>");
 		double test0;
-		for (int i=0;i<exons.length;i+=1){
+		for (int i=0;i<exons.length;i+=iter){
 			test0=Integer.parseInt(exons[i]) % 2;
 			//System.out.println(test0);
 			if (test0==0){
@@ -37,22 +39,6 @@ public class positions {
 		return builder.toString();
 	}
 	
-	public String getExonHTML(int start,int size,String seqType){
-		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.getFontSize()+"px;\">");
-		for (int i=start;(i<exons.length)&&(i<=start+size);i+=1){
-			if (seqType=="Amino acids"){
-				builder.append(exonsHTML[(int)(i*3)]);
-			}else if (seqType=="Codons") {
-				builder.append(exonsHTML[i*3]+exonsHTML[i*3]+exonsHTML[i*3]);
-			}else {
-				builder.append(exonsHTML[i]);
-			}
-		}
-		builder.append("</div></html>");
-		return(builder.toString());
-	}
-	
 	public positions(String posPath,int Input_alnLen,String seqType) throws FileNotFoundException {
 		int alnLen;
 		if (seqType=="Nucleotids"){
@@ -60,7 +46,6 @@ public class positions {
 		}else{
 			alnLen=Input_alnLen*3;
 		}
-		
 		//work in 0-based ==> minus 1 everywhere 
 		exons= new String[alnLen];
 		refPos= new String[alnLen];

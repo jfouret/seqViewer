@@ -2,7 +2,6 @@ package evolution;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -58,10 +57,16 @@ public class pamlFile extends File {
 
 	public String buildHTML(int input_alnLen,String seqType){
 		int alnLen;
+		int iter;
 		if (seqType=="Codons") {
 			alnLen=3*input_alnLen;
+			iter=1;
+		}else if (seqType=="Amino acids") {
+			alnLen=3*input_alnLen;
+			iter=3;
 		}else {
 			alnLen=input_alnLen;
+			iter=1;
 		}
 		System.out.println("size char : "+tools.myFONT.getWidth());
 		selectedHTML= new String[alnLen];
@@ -69,7 +74,7 @@ public class pamlFile extends File {
 		Double Prob;	
 		StringBuilder builder = new StringBuilder();
 		builder.append("<html><span style=\"text-align: right;\">");
-		for (int i=0;(i<alnLen);i+=1){
+		for (int i=0;(i<alnLen);i+=iter){
 			if (alnPosProb.keySet().contains(i)){
 				Prob=alnPosProb.get(i);
 				if (Prob>50 && Prob<80){
@@ -91,5 +96,4 @@ public class pamlFile extends File {
 		builder.append("FIN</span></html>");
 		return(builder.toString());
 	}
-
 }
