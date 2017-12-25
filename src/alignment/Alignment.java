@@ -18,12 +18,14 @@ public class Alignment {
 	 */
 	private int nuclLen ; 
 	private int codLen ; 
+	private int nCol;
+	private int nLine;
 	private HashMap<String,String> colorAA = new HashMap<String,String>();
 	private HashMap<String,String> colorNucl = new HashMap<String,String>();
 	private alignment.htmlBlock htmlTextMap ;
 	private genCode geneticCode ;
 	private HashMap<String,String> Sequences ;
-	
+	private String HTML;
 	private HashMap<String,String[]> nuclText  = new HashMap<String,String[]>(); 
 	private HashMap<String,String[]> codText = new HashMap<String,String[]>() ;
 	private HashMap<String,String[]> aaText = new HashMap<String,String[]>() ;
@@ -85,8 +87,7 @@ public class Alignment {
 		}
 	}
 	
-	public String buildHTML(String seqType,Species species) {
-		int nCol;
+	public void buildHTML(String seqType,Species species) {
 		HashMap<String, String> letterColor;
 		HashMap<String, String[]> letterText;
 		if (seqType=="Nucleotids"){
@@ -119,6 +120,7 @@ public class Alignment {
 				builder.append("<b style=\"background-color: #"+letterColor.get(letter)+";\">"+letter+"</b>");
 			}
 			builder.append("<br>");
+			nLine++;
 		}
 		for (String foregroundSpecies: foregroundList ) {
 			//System.out.println("OK entering the for statement on species");
@@ -130,23 +132,21 @@ public class Alignment {
 				//System.out.println(letter+"formatted as : "+formatHTML[i]);
 			}
 			builder.append("<br>");
+			nLine++;
 		}
-		return builder.toString();
+		HTML = builder.toString();
 	}
-	public alignment.htmlBlock getHtmlBlock(){
-		return(htmlTextMap);
+	
+	public String getHTML(){
+		return(HTML);
 	}
 	
 	public int getHeight(){
-		double height = htmlTextMap.getNLine()*myFONT.getHeight();
+		double height = nLine*myFONT.getHeight();
 		return((int)height+1);
 	}
 	
 	public int getSize(){
-		return(htmlTextMap.getNCol());
-	}
-	public int getWidth(){
-		double width = htmlTextMap.getNCol()*myFONT.getWidth();
-		return((int)width+1);
+		return(nCol);
 	}
 }

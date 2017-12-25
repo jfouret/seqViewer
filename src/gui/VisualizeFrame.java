@@ -215,8 +215,8 @@ public class VisualizeFrame extends JFrame {
 			e.printStackTrace();
 		}
 		evolution.speciesFile speciesFile=new evolution.speciesFile(speciesPath);
-		species= speciesFile.readSpecies();
-		aln.format(seqType, species);
+		species= speciesFile.readSpecies();	
+		aln.buildHTML(seqType, species);
 		positions= new evolution.positions(positionsPath,aln.getSize(),seqType);
 		selection = new evolution.pamlFile(pamlPath,positions);
 		//featureFile = new tools.featureFile(uniprotPath,positions);
@@ -250,7 +250,7 @@ public class VisualizeFrame extends JFrame {
 		//}else {
 		//	txtpnAln.setPreferredSize(new Dimension(aln.getWidth(), aln.getHeight()));
 		//}
-		txtpnAln.setText(aln.getHtmlBlock().getHTML(species));
+		txtpnAln.setText(aln.getHTML());
 		txtpnAln.getFontMetrics(myFONT.getFont()).getHeight();
 		txtpnAln.setFont(myFONT.getFont());
 		
@@ -266,7 +266,7 @@ public class VisualizeFrame extends JFrame {
 		txtpnAlnSpecies= new JLabel();
 		txtpnAlnSpecies.setBackground(Color.WHITE);
 		txtpnAlnSpecies.setFont(myFONT.getFont());
-		txtpnAlnSpecies.setText(aln.getHtmlBlock().getHTMLSpecies(species));
+		//TODO CORRECT txtpnAlnSpecies.setText(aln.getHtmlBlock().getHTMLSpecies(species));
 		txtpnAlnSpecies.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		txtpnAlnSpecies.setBounds(5, 80, legendSize-5, aln.getHeight());
 		
