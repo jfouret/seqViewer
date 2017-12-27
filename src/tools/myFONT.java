@@ -21,6 +21,7 @@ public class myFONT {
 	}
 	public static int getFontSize(){
 		return fontSize;
+		
 	}
 	public static Double getWidth(){
 		String fontFamilly;

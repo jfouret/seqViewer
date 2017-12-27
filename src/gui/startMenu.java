@@ -94,7 +94,6 @@ public class startMenu extends JFrame {
 		
 		
 	}
-
 	/**
 	 * Create the frame.
 	 */
@@ -123,8 +122,9 @@ public class startMenu extends JFrame {
 		
 		btnLoadGene.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
-		    	JFileChooser fileChooser = new JFileChooser(startMenu.this.WorkDir);
-		    	fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		    	//JFileChooser fileChooser = new JFileChooser(startMenu.this.WorkDir);
+		    	  JFileChooser fileChooser = new JFileChooser("C:\\Users\\Julien\\Desktop\\kg_RELA");
+		    	  fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		        //
 		        // disable the "All files" option.
 		        //

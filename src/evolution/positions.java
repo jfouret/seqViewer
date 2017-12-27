@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class positions {
 	private String[] exons;
@@ -108,4 +109,34 @@ public class positions {
 	public boolean[] getBlocks(){
 		return(Cblocks);
 	}
+	
+	public String getPos(String seqType,int nCol) {
+		int alnLen;
+		String pos;
+		int fact;
+		if (seqType=="Nucleotids"){
+			alnLen=nCol;
+			fact=1;
+		}else if (seqType=="Amino acids"){
+			alnLen=nCol*3;
+			fact=3;
+		} else {
+			alnLen=nCol*3;
+			fact=1;
+		}
+		StringBuilder builder=new StringBuilder();
+		builder.append("1   .    ");
+		for (int i = fact*10; i < alnLen ; i+=fact*10) {
+			pos =aln2ref[i-1];
+			if (pos.equals(".")) {
+				builder.append("-    ");
+			}else {
+				builder.append(String.valueOf((int)Integer.parseInt(pos)/fact));
+				builder.append(String.join("", Collections.nCopies(5-String.valueOf((int)Integer.parseInt(pos)/fact).length(), " ")));
+			}
+			builder.append(".    ");
+		}
+		return builder.toString();
+	}
+	
 }

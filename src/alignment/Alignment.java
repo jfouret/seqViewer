@@ -11,6 +11,7 @@ import tools.myFONT;
  * @author julien.fouret
  *
  */
+
 public class Alignment {
 	/**
 	 * @param Input_geneticCode the genetic code to be used to analyze the alignment
@@ -20,9 +21,7 @@ public class Alignment {
 	private int codLen ; 
 	private int nCol;
 	private int nLine;
-	private HashMap<String,String> colorAA = new HashMap<String,String>();
-	private HashMap<String,String> colorNucl = new HashMap<String,String>();
-	private alignment.htmlBlock htmlTextMap ;
+	private HashMap<String,String> letterColor = new HashMap<String,String>();
 	private genCode geneticCode ;
 	private HashMap<String,String> Sequences ;
 	private String HTML;
@@ -41,8 +40,6 @@ public class Alignment {
 	public Alignment(HashMap<String,String> Input_Sequences, genCode Input_geneticCode) {
 		// initiate colors
 		//seqhg19=Input_Sequences.get("hg19").replaceAll("-", "");
-		colorAA.put("D","E60A0A"); colorAA.put("E","E60A0A"); colorAA.put("C","E6E600"); colorAA.put("M","E6E600"); colorAA.put("K","145AFF"); colorAA.put("R","145AFF"); colorAA.put("S","FA9600"); colorAA.put("T","FA9600"); colorAA.put("F","3232AA"); colorAA.put("Y","3232AA"); colorAA.put("N","00DCDC"); colorAA.put("Q","00DCDC"); colorAA.put("G","EBEBEB"); colorAA.put("V","0F820F"); colorAA.put("I","0F820F"); colorAA.put("L","0F820F"); colorAA.put("A","C8C8C8"); colorAA.put("W","B45AB4"); colorAA.put("H","8282D2"); colorAA.put("P","DC9682"); 
-		colorNucl.put("A","145AFF");colorNucl.put("T","E6E600");colorNucl.put("C","0F820F");colorNucl.put("G","E60A0A");
 		geneticCode=Input_geneticCode;
 		Sequences=Input_Sequences; //wash it ...
 		nuclLen = Sequences.get(Sequences.keySet().toArray()[0]).length();
@@ -88,27 +85,25 @@ public class Alignment {
 	}
 	
 	public void buildHTML(String seqType,Species species) {
-		HashMap<String, String> letterColor;
 		HashMap<String, String[]> letterText;
 		if (seqType=="Nucleotids"){
 			letterText=nuclText;
-			letterColor=colorNucl;
 			nCol=nuclLen;
+			letterColor.put("A","145AFF");letterColor.put("T","E6E600");letterColor.put("C","0F820F");letterColor.put("G","E60A0A");
 		}else if (seqType=="Amino acids"){
 			letterText=aaText;
-			letterColor=colorAA;
 			nCol=codLen;
+			letterColor.put("D","E60A0A"); letterColor.put("E","E60A0A"); letterColor.put("C","E6E600"); letterColor.put("M","E6E600"); letterColor.put("K","145AFF"); letterColor.put("R","145AFF"); letterColor.put("S","FA9600"); letterColor.put("T","FA9600"); letterColor.put("F","3232AA"); letterColor.put("Y","3232AA"); letterColor.put("N","00DCDC"); letterColor.put("Q","00DCDC"); letterColor.put("G","EBEBEB"); letterColor.put("V","0F820F"); letterColor.put("I","0F820F"); letterColor.put("L","0F820F"); letterColor.put("A","C8C8C8"); letterColor.put("W","B45AB4"); letterColor.put("H","8282D2"); letterColor.put("P","DC9682"); 
 		} else {
+			letterColor.put("D","E60A0A"); letterColor.put("E","E60A0A"); letterColor.put("C","E6E600"); letterColor.put("M","E6E600"); letterColor.put("K","145AFF"); letterColor.put("R","145AFF"); letterColor.put("S","FA9600"); letterColor.put("T","FA9600"); letterColor.put("F","3232AA"); letterColor.put("Y","3232AA"); letterColor.put("N","00DCDC"); letterColor.put("Q","00DCDC"); letterColor.put("G","EBEBEB"); letterColor.put("V","0F820F"); letterColor.put("I","0F820F"); letterColor.put("L","0F820F"); letterColor.put("A","C8C8C8"); letterColor.put("W","B45AB4"); letterColor.put("H","8282D2"); letterColor.put("P","DC9682"); 
 			letterText=codText;
-			letterColor=geneticCode.getColorCodons(colorAA);
 			nCol=codLen;
-			htmlTextMap = new alignment.htmlBlock(codLen);
-			htmlTextMap.addALNString(species, codText, geneticCode.getColorCodons(colorAA));
 		}
 		// When sequences are stored in char
 		ArrayList<String> backgroundList = species.getBackground();
 		ArrayList<String> foregroundList = species.getForeground();
 		String letter;
+		String color;
 		//System.out.println("OK entering the if statement");
 		StringBuilder builder = new StringBuilder();
 		builder.append("<html><span >");
@@ -117,7 +112,12 @@ public class Alignment {
 			for ( int i = 0; i < letterText.get(backgroundSpecies).length ; i+=1){	
 				//System.out.println("OK entering the for statement on letter");
 				letter=letterText.get(backgroundSpecies)[i];
-				builder.append("<b style=\"background-color: #"+letterColor.get(letter)+";\">"+letter+"</b>");
+				if (seqType=="Codons") {
+					color=letterColor.get(geneticCode.translate(letter));
+				}else {
+					color=letterColor.get(letter);
+				}
+				builder.append("<b style=\"background-color: #"+color+";\">"+letter+"</b>");
 			}
 			builder.append("<br>");
 			nLine++;
@@ -128,7 +128,12 @@ public class Alignment {
 			for (int i = 0; i < letterText.get(foregroundSpecies).length ; i+=1){	
 				//System.out.println("OK entering the for statement on letter");
 				letter=letterText.get(foregroundSpecies)[i];
-				builder.append("<u><b style=\"background-color: #"+letterColor.get(letter)+";\">"+letter+"</b></u>");
+				if (seqType=="Codons") {
+					color=letterColor.get(geneticCode.translate(letter));
+				}else {
+					color=letterColor.get(letter);
+				}
+				builder.append("<u><b style=\"background-color: #"+color+";\">"+letter+"</b></u>");
 				//System.out.println(letter+"formatted as : "+formatHTML[i]);
 			}
 			builder.append("<br>");
@@ -144,6 +149,28 @@ public class Alignment {
 	public int getHeight(){
 		double height = nLine*myFONT.getHeight();
 		return((int)height+1);
+	}
+	
+	public String getPos(String seqType) {
+		int alnLen;
+		String pos;
+		if (seqType=="Nucleotids"){
+			alnLen=nCol;
+		}else if (seqType=="Amino acids"){
+			alnLen=nCol;
+		} else {
+			alnLen=nCol*3;
+		}
+		StringBuilder builder=new StringBuilder();
+		builder.append("1   .    ");
+		for (int i = 10; i < alnLen+10 ; i+=10) {
+			//TODO make the string
+			pos = String.valueOf(i);
+			builder.append(pos);
+			builder.append(String.join("", Collections.nCopies(5-pos.length(), " ")));
+			builder.append(".    ");
+		}
+		return builder.toString();
 	}
 	
 	public int getSize(){

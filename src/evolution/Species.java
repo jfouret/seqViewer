@@ -25,5 +25,17 @@ public class Species {
 	public Species() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	public String getHTML(){
+		StringBuilder builder=new StringBuilder();
+		builder.append("<html><span>");
+		for (String spec : background) {
+			builder.append(spec+"<br>");
+		}
+		for (String spec : foreground) {
+			builder.append(spec+"<br>");
+		}
+		builder.append("</span></html>");
+		return builder.toString();
+	}
 }
