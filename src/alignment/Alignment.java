@@ -3,10 +3,7 @@
  */
 package alignment;
 import java.util.*;
-
 import evolution.Species;
-import tools.myFONT;
-
 /**
  * @author julien.fouret
  *
@@ -146,9 +143,8 @@ public class Alignment {
 		return(HTML);
 	}
 	
-	public int getHeight(){
-		double height = nLine*myFONT.getHeight();
-		return((int)height+1);
+	public int getLine(){
+		return(nLine);
 	}
 	
 	public String getPos(String seqType) {
@@ -175,5 +171,23 @@ public class Alignment {
 	
 	public int getSize(){
 		return(nCol);
+	}
+
+	public int getLength(String seqType) {
+		int alnLen=0;
+		switch (seqType){
+		case "Amino acids":
+			alnLen= nCol;
+			break;
+		case "Codons":
+			alnLen= nCol*3;
+			break;
+		case "Nucleotids":
+			alnLen= nCol;
+			break;
+		}
+		System.out.println("#getLength#"+alnLen);
+		System.out.println("#nCol#"+nCol);
+		return alnLen;
 	}
 }

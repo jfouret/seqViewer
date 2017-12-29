@@ -46,12 +46,26 @@ public class feature {
 		end=in_end-1; // from 0-based excluded to 0-based included
 		int alnStart=(positions.getPosFromRef(start*3+1)-1); 
 		int alnEnd=positions.getPosFromRef(end*3+1); // excluded
-		HTML_built=new String[positions.getAlnSize()+1];
-		Arrays.fill(HTML_built, "<b color=\"white\" >"+myCST.BLOCK+"</b>");
+		HTML_built=new String[positions.getAlnSize()];
+		Arrays.fill(HTML_built, "<b color=\""+myCST.backColorString+"\" >"+myCST.BLOCK+"</b>");
 		switch (type) {
 		case "interval":  
-			for (int i=alnStart;i<=alnEnd+1;i+=1){
-				HTML_built[i]="<b color=\""+featType.getCol(id)+"\">"+myCST.BLOCK+"</b>";
+			if (id.equals("STRAND")) {
+				for (int i=alnStart;i<=alnEnd+1;i+=1){
+					HTML_built[i]="<b color=\""+featType.getCol(id)+"\">S</b>";
+				}
+			}else if (id.equals("HELIX")){
+				for (int i=alnStart;i<=alnEnd+1;i+=1){
+					HTML_built[i]="<b color=\""+featType.getCol(id)+"\">H</b>";
+				}
+			}else if (id.equals("TURN")){
+				for (int i=alnStart;i<=alnEnd+1;i+=1){
+					HTML_built[i]="<b color=\""+featType.getCol(id)+"\">T</b>";
+				}
+			}else {
+				for (int i=alnStart;i<=alnEnd+1;i+=1){
+					HTML_built[i]="<b color=\""+featType.getCol(id)+"\">"+myCST.BLOCK+"</b>";
+				}
 			}
 			break;
 		case "site":
@@ -79,25 +93,27 @@ public class feature {
 		}
 	}
 	
-	public String getHTML_line(int start, int size, String input_seq_type){
+	public String getHTML_line(String input_seq_type){
 		StringBuilder builder = new StringBuilder();
+		builder.append("<html><span>");
+		int alnLength=HTML_built.length;
+		int iter = 0;
 		switch (input_seq_type){
 		case "Amino acids":
-			for (int i=start;i<=start+size+1;i+=1){
-				builder.append(HTML_built[i*3]);
-			}
+			iter=3;
 			break;
 		case "Codons":
-			for (int i=start;i<=start+size;i+=1){
-				builder.append(HTML_built[i]);
-			}
+			iter=1;
 			break;
 		case "Nucleotids":
-			for (int i=start;i<start+size+1;i+=1){
-				builder.append(HTML_built[i]);
-			}
+			iter=1;
 			break;
 		}
+		System.out.println("size in feat : "+HTML_built.length);
+		for (int i=0;i<alnLength;i+=iter){
+			builder.append(HTML_built[i]);
+		}
+		builder.append("</span></html>");
 		return(builder.toString());
 	}
 }

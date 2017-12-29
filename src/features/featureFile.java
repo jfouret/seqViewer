@@ -8,8 +8,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JLabel;
 import evolution.positions;
 import tools.myFONT;
 
@@ -104,15 +106,27 @@ public class featureFile {
 		sc.close();
 	}
 	
-	public String getHTML(int start,int size,String input_seq_type,int input_num){
-		StringBuilder builder = new StringBuilder();
-		builder.append("<html><div style=\"font-family: "+myFONT.getFontFamilly()+";font-size:"+myFONT.getFontSize()+"px;\">");
-		
-		feature feat=featureArray[input_num];
-				builder.append(feat.getHTML_line(start,size,input_seq_type));
-		builder.append("</div></html>");
-		return(builder.toString());
+	public void update_AvailableType(HashMap<String,Boolean> newAvailableType){
+		availableType=newAvailableType;
 	}
+	
+	public JLabel[] getLabels(String seqType) {
+		List<JLabel> Labels = new ArrayList<JLabel>();
+		JLabel newLabel;
+		for (feature feat: featureArray){
+			if (feat.isSelected(availableType)) {
+				newLabel= new JLabel();
+				newLabel.setBorder(null);
+				newLabel.setText(feat.getHTML_line(seqType));
+				newLabel.setToolTipText("<html><b>"+feat.getType()+" : </b>"+feat.getDescription()+"</html>");
+				Labels.add(newLabel);
+			}
+		}
+		JLabel[] array = new JLabel[Labels.size()];
+		Labels.toArray(array);
+		return array;
+	}
+	
 	public long getHeight(){
 		return(featureArray.length*myFONT.getFontSize());
 	}

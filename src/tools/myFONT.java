@@ -23,7 +23,7 @@ public class myFONT {
 		return fontSize;
 		
 	}
-	public static Double getWidth(){
+	public Double getWidth(){
 		String fontFamilly;
 		if ((OS.indexOf("win") >= 0)| (OS.indexOf("mac") >= 0)){
 			fontFamilly= "Courier New";
@@ -32,11 +32,14 @@ public class myFONT {
 		}
 		Font theFont=new Font(fontFamilly,Font.PLAIN,fontSize);
 		g.setFont(theFont);
-		return (double) (g.getFontMetrics(theFont).charWidth('A'));
-		//return (double) (g.getFontMetrics(theFont).stringWidth("0000000000111111111100000000001111111111000000000011111111110000000000111111111100000000001111111111")/100);
+		return (double) (g.getFontMetrics(theFont).charWidth('A'));	
 	}
 	
-	public static Double getHeight(){
+	public void modSize(int alter){
+		fontSize=fontSize+alter;
+	}
+	
+	public Double getHeight(){
 		String fontFamilly;
 		if ((OS.indexOf("win") >= 0)| (OS.indexOf("mac") >= 0)){
 			fontFamilly= "Courier New";
@@ -45,11 +48,13 @@ public class myFONT {
 		}
 		Font theFont=new Font(fontFamilly,Font.PLAIN,fontSize);
 		g.setFont(theFont);
+		
 		return (double) (g.getFontMetrics(theFont).getHeight());
-		//return (double) (g.getFontMetrics(theFont).stringWidth("0000000000111111111100000000001111111111000000000011111111110000000000111111111100000000001111111111")/100);
+		
+		
 	}
 	
-	public static Font getFont(){
+	public Font getFont(){
 		String fontFamilly;
 		if ((OS.indexOf("win") >= 0)| (OS.indexOf("mac") >= 0)){
 			fontFamilly= "Courier New";

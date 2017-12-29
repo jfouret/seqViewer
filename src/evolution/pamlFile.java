@@ -68,7 +68,6 @@ public class pamlFile extends File {
 			alnLen=input_alnLen;
 			iter=1;
 		}
-		System.out.println("size char : "+tools.myFONT.getWidth());
 		selectedHTML= new String[alnLen];
 		String color;
 		Double Prob;	
@@ -89,7 +88,7 @@ public class pamlFile extends File {
 				;
 				builder.append("<b style=\"color: "+color+"\">"+tools.myCST.FILLARROW+"</b>");
 			}else{
-				color="white";
+				color=tools.myCST.backColorString;
 				builder.append("<b style=\"color: "+color+"\">"+tools.myCST.BLOCK+"</b>");
 			}
 		}

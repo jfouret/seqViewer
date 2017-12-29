@@ -12,9 +12,11 @@ import java.awt.Color;
 import java.awt.BorderLayout;
 
 public class featureSelect extends JPanel {
+	
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
 	public  HashMap<String,JCheckBox> idCheck= new HashMap<String,JCheckBox>() ;
 	public  HashMap<String,Canvas> idCanvas = new HashMap<String,Canvas>() ;
@@ -23,6 +25,7 @@ public class featureSelect extends JPanel {
 		HashMap<String,Boolean> availableType  = new HashMap<String, Boolean>();
 		for (String id: idCheck.keySet()){
 			availableType.put(id,idCheck.get(id).isSelected());
+			
 		}
 		return(availableType);
 	}
