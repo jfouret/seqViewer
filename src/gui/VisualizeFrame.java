@@ -84,13 +84,10 @@ public class VisualizeFrame extends JFrame {
 	 * set dynamic change to the frame
 	 */
 	
-	public void Set_scroll_Start(int slide_start) {
-		Set_scroll_Start(slide_start,false);
-	}
 	
-	public void Set_scroll_Start(int slide_start,boolean force){
+	public void Set_scroll_Start(int slide_start){
 		JScrollBar NewScroll= scrolledTxtpnAln.getHorizontalScrollBar();
-		if (force || Math.abs(slide_start-NewScroll.getValue())>=myFont.getWidth()) {
+		if (Math.abs(slide_start-NewScroll.getValue())>=myFont.getWidth()) {
 			NewScroll.setValue((int) (slide_start-slide_start%myFont.getWidth()));
 			NewScroll.setSize(0, 0);
 			scrolledTxtpnAln.setHorizontalScrollBar(NewScroll);
@@ -345,6 +342,8 @@ public class VisualizeFrame extends JFrame {
 		btnUpdateUniprot = new JButton("Uniprot: update selection");
 		btnUpdateUniprot.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
+		    	  int saveStart=scrolledTxtpnAln.getHorizontalScrollBar().getValue();
+		    	  System.out.println("START==>"+saveStart);
 		    	  contentPane.remove(scrollFeatPane);
 		    	  contentPane.remove(featBar);
 		    	  contentPane.validate();
@@ -352,6 +351,8 @@ public class VisualizeFrame extends JFrame {
 		    	  featLabelArray=featureFile.getLabels(seqType);
 		    	  updateFeatures();
 		    	  update_size();
+		    	  Set_scroll_Start(0);
+		    	  Set_scroll_Start(saveStart);
 		      }
 		    });
 		btnUpdateUniprot.setBounds(5, 10, 178, 23);
@@ -428,7 +429,6 @@ public class VisualizeFrame extends JFrame {
 		}
 		FeatPane.setBackground(tools.myCST.backColor);
 		FeatPane.setPreferredSize(new Dimension((int) (aln.getLength(seqType)*myFont.getWidth()), featLabelArray.length*height+2));
-		
 		scrollFeatPane = new JScrollPane(FeatPane);
 		scrollFeatPane.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 		scrollFeatPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
@@ -436,6 +436,5 @@ public class VisualizeFrame extends JFrame {
 		featBar = scrollFeatPane.getVerticalScrollBar();
 		contentPane.add(scrollFeatPane);
 		contentPane.add(featBar);
-		Set_scroll_Start(slider.getValue(),true);
 	}
 }
