@@ -109,7 +109,6 @@ public class feature {
 			iter=1;
 			break;
 		}
-		System.out.println("size in feat : "+HTML_built.length);
 		for (int i=0;i<alnLength;i+=iter){
 			builder.append(HTML_built[i]);
 		}

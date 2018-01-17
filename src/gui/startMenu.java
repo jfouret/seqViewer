@@ -122,12 +122,8 @@ public class startMenu extends JFrame {
 		
 		btnLoadGene.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
-		    	//JFileChooser fileChooser = new JFileChooser(startMenu.this.WorkDir);
-		    	  JFileChooser fileChooser = new JFileChooser("C:\\Users\\Julien\\Desktop\\kg_RELA");
+		    	  JFileChooser fileChooser = new JFileChooser(startMenu.this.WorkDir);
 		    	  fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		        //
-		        // disable the "All files" option.
-		        //
 		    	fileChooser.setAcceptAllFileFilterUsed(false);
 		        int returnValue = fileChooser.showOpenDialog(null);
 		        if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -251,7 +247,7 @@ public class startMenu extends JFrame {
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 1.3.4 </div></html>");
+		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 1.4.0 </div></html>");
 		txtpnHuh.setBounds(237, 298, 197, 54);
 		contentPane.add(txtpnHuh);
 		

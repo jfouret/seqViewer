@@ -11,13 +11,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.event.*;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -343,7 +341,6 @@ public class VisualizeFrame extends JFrame {
 		btnUpdateUniprot.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
 		    	  int saveStart=scrolledTxtpnAln.getHorizontalScrollBar().getValue();
-		    	  System.out.println("START==>"+saveStart);
 		    	  contentPane.remove(scrollFeatPane);
 		    	  contentPane.remove(featBar);
 		    	  contentPane.validate();
@@ -420,7 +417,6 @@ public class VisualizeFrame extends JFrame {
 		((FlowLayout)FeatPane.getLayout()).setHgap(0);
 		int height=myFont.getHeight().intValue();
 		int i=0;
-		System.out.println("Number of feat to display : "+featLabelArray.length);
 		for (JLabel feat : featLabelArray) {
 			feat.setBounds(0,i*height, AvailViewSize,height);
 			feat.setFont(myFont.getFont());

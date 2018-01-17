@@ -36,8 +36,6 @@ public class pamlFile extends File {
 					//0=> pos
 					//2=> prob
 					blockPos=(Integer.parseInt(split[0])-1)*3;
-					//System.out.println("OK parsing the line : "+currentLine);
-					//System.out.println("blockPos:"+blockPos+" ==> alnPos:"+positions.getPosFromBlock(blockPos));
 					alnPosRef.put(positions.getPosFromBlock(blockPos),positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0]))));
 					alnPosRef.put(positions.getPosFromBlock(blockPos)+1,positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0]))));
 					alnPosRef.put(positions.getPosFromBlock(blockPos)+2,positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0]))));

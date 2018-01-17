@@ -186,8 +186,6 @@ public class Alignment {
 			alnLen= nCol;
 			break;
 		}
-		System.out.println("#getLength#"+alnLen);
-		System.out.println("#nCol#"+nCol);
 		return alnLen;
 	}
 }

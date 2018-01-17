@@ -44,9 +44,7 @@ public class featureFile {
 			//3= end
 			//4++= Descritpion 
 			// step 1 add in featureArrayList
-			// System.out.println("LINE ==> "+currentLine);
 			if (split[0].equals("FT")){
-				//System.out.println(currentLine+" class :"+split[1]);
 				if (featType.isClass(split[1])){
 					if (split[3].equals("?")){
 						split[3]=split[2];
@@ -92,7 +90,6 @@ public class featureFile {
 			//4=type //description
 			//5= OutOfRange ... not used ...
 			// step 1 add in featureArrayList
-			// System.out.println("LINE ==> "+currentLine);
 			featureArrayList.add(new feature(split[3],Integer.parseInt(split[1]), Integer.parseInt(split[2]),split[4],featType,positions,iterNum));
 			iterNum+=1; // num == position in feature array !!!
 			// step 2 check in availableType is the type is present ? add if not with False
