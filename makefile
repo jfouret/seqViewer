@@ -6,10 +6,11 @@ seqViewer.jar:
 	cp src/Manifest.txt build/Manifest.txt
 	cd build && jar -cfm ../seqViewer.jar Manifest.txt .
 	rm -r build
+	tar -xvzf pteropus_vs_mammals.tar.gz
 
 .PHONY: clean 
 clean:
 	-rm seqViewer.jar
 	-rm -r build
-
+	-rm -r pteropus_vs_mammals	
 

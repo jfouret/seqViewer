@@ -26,5 +26,5 @@ On a virtual desktop just click on the `seqViewer.jar` file. By command line: `j
 
 # Getting Started
 
-
+In the folder `pteropus_vs_mammals` you'll find ~800 folders that are input for visualization. You can specified `pteropus_vs_mammals` folder as main default folder. Each folder correspond to a gene that is is under branch-site positive selection in *Pteropus* ancestor.
 
