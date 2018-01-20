@@ -4,7 +4,7 @@ Multiple sequence alignment (MSA) is central in many bio-informatics and phyloge
 
 # Requirements 
 
-[java-8-jdk](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) is required for building the tools. (Not tested yet with openjdk).
+**openjdk-8-jdk** is required for building the tools.
 
 Not compatible with java 7 !
 
@@ -27,4 +27,5 @@ On a virtual desktop just click on the `seqViewer.jar` file. By command line: `j
 # Getting Started
 
 In the folder `pteropus_vs_mammals` you'll find ~800 folders that are input for visualization. You can specified `pteropus_vs_mammals` folder as main default folder. Each folder correspond to a gene that is is under branch-site positive selection in *Pteropus* ancestor.
+
 

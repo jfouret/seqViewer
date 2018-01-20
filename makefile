@@ -1,7 +1,7 @@
 seqViewer.jar:
 
 	mkdir build
-	javac -d build -cp src src/SeqViewer.java
+	javac -release 8 -d build -cp src src/SeqViewer.java
 	cp -r src/ressources build/ressources
 	cp src/Manifest.txt build/Manifest.txt
 	cd build && jar -cfm ../seqViewer.jar Manifest.txt .
