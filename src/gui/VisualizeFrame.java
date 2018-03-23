@@ -41,19 +41,14 @@ public class VisualizeFrame extends JFrame {
 	private String seqType;
 	private String frametitle;
 	private evolution.Species species;
-	private features.featureFile featureFile;
+	private features.featureAPI featureAPI;
 	
 	evolution.positions positions;
-	// private String pamlPath= "./out";
-	// private String SpeciesPath= "./species.txt";
-	// private String alnPath= "./codon_aln.fa";
-	// private String positionsPath= "./posDict.tab";
 	evolution.pamlFile selection;
 		
 	private static final long serialVersionUID = 3034391181248326868L;
 	private JPanel contentPane;
 	private JLabel txtpnAln;
-	//private JTextPane txtpnUniprot;
 	private JLabel txtpnAlnSpecies;
 	private JScrollPane scrolledTxtpnAln;
 	private JLabel txtpnRefPos;
@@ -75,13 +70,6 @@ public class VisualizeFrame extends JFrame {
 	private JScrollBar featBar;
 	
 	private JLabel[] featLabelArray;
-	
-	//private String GENETEST;
-	
-	/**
-	 * set dynamic change to the frame
-	 */
-	
 	
 	public void Set_scroll_Start(int slide_start){
 		JScrollBar NewScroll= scrolledTxtpnAln.getHorizontalScrollBar();
@@ -166,13 +154,11 @@ public class VisualizeFrame extends JFrame {
 		for (JLabel feat : featLabelArray) {
 			feat.setFont(theFont);
 		}
-		
 		update_size();
-		
 	}
 	
 	public void changeAvailableType(String type_id, Boolean boxChecked){
-		featureFile.availableType.replace(type_id, boxChecked);
+		featureAPI.availableType.replace(type_id, boxChecked);
 	}
 	
 	/**
@@ -223,14 +209,12 @@ public class VisualizeFrame extends JFrame {
 
 		selection = new evolution.pamlFile(pamlPath,positions);
 
-		//featureFile = new tools.featureFile(uniprotPath,positions);
+		//featureAPI = new tools.featureAPI(uniprotPath,positions);
 		try {
-			featureFile = new features.featureFile(new URL("http://www.uniprot.org/uniprot/"+UniprotID+".txt"),positions);
+			featureAPI = new features.featureAPI(new URL("http://www.uniprot.org/uniprot/"+UniprotID+".txt"),positions);
 		} catch (MalformedURLException e) {
-			featureFile = new features.featureFile(uniprotPath,positions);
 			e.printStackTrace();
 		} catch (IOException e) {
-			featureFile = new features.featureFile(uniprotPath,positions);
 			e.printStackTrace();
 		}
 
@@ -344,8 +328,8 @@ public class VisualizeFrame extends JFrame {
 		    	  contentPane.remove(scrollFeatPane);
 		    	  contentPane.remove(featBar);
 		    	  contentPane.validate();
-		    	  featureFile.update_AvailableType(featSelect.UpdateAvailableType());
-		    	  featLabelArray=featureFile.getLabels(seqType);
+		    	  featureAPI.update_AvailableType(featSelect.UpdateAvailableType());
+		    	  featLabelArray=featureAPI.getLabels(seqType);
 		    	  updateFeatures();
 		    	  update_size();
 		    	  Set_scroll_Start(0);
@@ -372,9 +356,9 @@ public class VisualizeFrame extends JFrame {
 		      }
 		    });
 		btnMinus.setBounds(518, 7, 45, 23);
-		featSelect = new gui.featureSelect(featureFile,frametitle);
+		featSelect = new gui.featureSelect(featureAPI,frametitle);
 		
-		featLabelArray=featureFile.getLabels(seqType);
+		featLabelArray=featureAPI.getLabels(seqType);
 		updateFeatures();
 		update_font();
 

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import features.featureFile;
+import features.featureAPI;
 
 import javax.swing.JCheckBox;
 import java.awt.Canvas;
@@ -30,7 +30,7 @@ public class featureSelect extends JPanel {
 		return(availableType);
 	}
 	
-	public featureSelect(featureFile featFile,String input_title) {
+	public featureSelect(featureAPI featFile,String input_title) {
 		
 		JCheckBox checkBox = new JCheckBox("New check box");
 		add(checkBox, BorderLayout.NORTH);
