@@ -40,12 +40,10 @@ public class VisualizeFrame extends JFrame {
 	private alignment.Alignment aln;
 	private String seqType;
 	private String frametitle;
-	private evolution.Species species;
 	private features.featureAPI featureAPI;
-	
+	private evolution.treeFile treeFile;
 	evolution.positions positions;
 	evolution.pamlFile selection;
-		
 	private static final long serialVersionUID = 3034391181248326868L;
 	private JPanel contentPane;
 	private JLabel txtpnAln;
@@ -85,9 +83,9 @@ public class VisualizeFrame extends JFrame {
 	}
 	
 	// Dimensions
-	private int legendWidth=105;
+	private int legendWidth;
 	private int legendX=5;
-	private int txtX=legendWidth+10;
+	private int txtX=legendWidth;
 	private int startY=40;	
 	private int windowWidth;
 	private int windowHeight;
@@ -98,6 +96,8 @@ public class VisualizeFrame extends JFrame {
 
 	
 	public void update_size(){
+		legendWidth=1+(int) ((1+treeFile.getSize())*myFont.getWidth());
+		txtX=legendWidth+10;
 		windowWidth=contentPane.getWidth();
 		windowHeight=contentPane.getHeight();
 		ctrlWidth=windowWidth-10;
@@ -198,10 +198,9 @@ public class VisualizeFrame extends JFrame {
     		        JOptionPane.WARNING_MESSAGE);
 
 		}
-
-		evolution.speciesFile speciesFile=new evolution.speciesFile(speciesPath);
-
-		species= speciesFile.readSpecies();
+		treeFile=new evolution.treeFile(speciesPath);
+		String[] species = treeFile.getSpecies();
+		
 
 		aln.buildHTML(seqType, species);
 
@@ -243,8 +242,8 @@ public class VisualizeFrame extends JFrame {
 		scrolledTxtpnAln.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 
 		txtpnAlnSpecies= new JLabel();
-		txtpnAlnSpecies.setText(species.getHTML());
-		txtpnAlnSpecies.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtpnAlnSpecies.setText(treeFile.getHTreeML());
+		txtpnAlnSpecies.setVerticalAlignment(SwingConstants.TOP);
 		txtpnAlnSpecies.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 
 		txtpnlegendSelection= new JLabel();

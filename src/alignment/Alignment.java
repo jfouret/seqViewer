@@ -3,7 +3,6 @@
  */
 package alignment;
 import java.util.*;
-import evolution.Species;
 /**
  * @author julien.fouret
  *
@@ -81,7 +80,7 @@ public class Alignment {
 		}
 	}
 	
-	public void buildHTML(String seqType,Species species) {
+	public void buildHTML(String seqType,String[] species) {
 		HashMap<String, String[]> letterText;
 		if (seqType=="Nucleotids"){
 			letterText=nuclText;
@@ -97,14 +96,12 @@ public class Alignment {
 			nCol=codLen;
 		}
 		// When sequences are stored in char
-		ArrayList<String> backgroundList = species.getBackground();
-		ArrayList<String> foregroundList = species.getForeground();
 		String letter;
 		String color;
 		//System.out.println("OK entering the if statement");
 		StringBuilder builder = new StringBuilder();
 		builder.append("<html><span >");
-		for (String backgroundSpecies: backgroundList ) {
+		for (String backgroundSpecies: species ) {
 			//System.out.println("OK entering the for statement on species");
 			for ( int i = 0; i < letterText.get(backgroundSpecies).length ; i+=1){	
 				//System.out.println("OK entering the for statement on letter");
@@ -115,23 +112,6 @@ public class Alignment {
 					color=letterColor.get(letter);
 				}
 				builder.append("<b style=\"background-color: #"+color+";\">"+letter+"</b>");
-			}
-			builder.append("<br>");
-			nLine++;
-		}
-		for (String foregroundSpecies: foregroundList ) {
-			//System.out.println("OK entering the for statement on species");
-			//for (Character letter : letterText.get(backgroundSpecies) ){
-			for (int i = 0; i < letterText.get(foregroundSpecies).length ; i+=1){	
-				//System.out.println("OK entering the for statement on letter");
-				letter=letterText.get(foregroundSpecies)[i];
-				if (seqType=="Codons") {
-					color=letterColor.get(geneticCode.translate(letter));
-				}else {
-					color=letterColor.get(letter);
-				}
-				builder.append("<u><b style=\"background-color: #"+color+";\">"+letter+"</b></u>");
-				//System.out.println(letter+"formatted as : "+formatHTML[i]);
 			}
 			builder.append("<br>");
 			nLine++;

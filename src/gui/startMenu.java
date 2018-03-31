@@ -36,7 +36,7 @@ public class startMenu extends JFrame {
 	private JTextField textFieldGenePath;
 	private JComboBox<String> seqTypeBox;
 	private String suffix_pamlPath= "/out";
-	private String suffix_speciesPath= "/species.txt";
+	private String suffix_speciesPath= "/../tree.nh";
 	private String suffix_alignmentPath= "/codon_aln.fa";
 	private String suffix_positionsPath= "/posDict.tab";
 	private String suffix_uniprotPath= "/uniprot.tab";
