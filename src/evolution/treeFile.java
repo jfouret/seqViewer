@@ -35,8 +35,6 @@ public class treeFile{
 		speciesList=((String) leafs_python.__str__().getString()).split(",");
 		PyObject size_python=interp.eval("res['size']");
 		size = Double.parseDouble(size_python.__str__().getString());
-		System.out.println(interp.eval("res['leafs']").__str__().getString());
-		System.out.println(html_tree);
 		interp.close();
 	}
 
