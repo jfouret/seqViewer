@@ -101,11 +101,11 @@ public class Alignment {
 		//System.out.println("OK entering the if statement");
 		StringBuilder builder = new StringBuilder();
 		builder.append("<html><span >");
-		for (String backgroundSpecies: species ) {
+		for (String spec: species ) {
 			//System.out.println("OK entering the for statement on species");
-			for ( int i = 0; i < letterText.get(backgroundSpecies).length ; i+=1){	
+			for ( int i = 0; i < letterText.get(spec).length ; i+=1){	
 				//System.out.println("OK entering the for statement on letter");
-				letter=letterText.get(backgroundSpecies)[i];
+				letter=letterText.get(spec)[i];
 				if (seqType=="Codons") {
 					color=letterColor.get(geneticCode.translate(letter));
 				}else {

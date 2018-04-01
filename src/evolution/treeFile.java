@@ -22,20 +22,12 @@ public class treeFile{
 				stringBuilder.append(line).append("\n");
 			}
 		} catch (IOException e) {
-			System.out.println("SECOND");
 			e.printStackTrace();
 		}
-		
 		content=stringBuilder.toString().trim();
-		System.out.println("step3");
 		ClassLoader classLoader = getClass().getClassLoader();
 		PythonInterpreter interp = new PythonInterpreter();
-		System.out.println("step4");
 		interp.execfile(classLoader.getResource("ressources/disruptree.py").getFile());
-		System.out.println("step5");
-		
-		
-		
 		interp.exec("res=disruptree('"+content+"')");
 		PyObject html_tree_python = interp.eval("res['html_tree']");
 		html_tree=(String) html_tree_python.__str__().getString();
@@ -43,8 +35,8 @@ public class treeFile{
 		speciesList=((String) leafs_python.__str__().getString()).split(",");
 		PyObject size_python=interp.eval("res['size']");
 		size = Double.parseDouble(size_python.__str__().getString());
-		System.out.println("#"+size_python.__str__().getString()+"#");
-		
+		System.out.println(interp.eval("res['leafs']").__str__().getString());
+		System.out.println(html_tree);
 		interp.close();
 	}
 
