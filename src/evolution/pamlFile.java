@@ -13,7 +13,7 @@ public class pamlFile extends File {
 	String[] selectedHTML;
 	String[] selectedToolTip;
 	public String currentToolTip = new String();
-	private HashMap<Integer,Double> alnPosProb= new HashMap<Integer,Double>();
+	private HashMap<Integer,Integer> alnPosProb= new HashMap<Integer,Integer>();
 	private HashMap<Integer,String> alnPosRef= new HashMap<Integer,String>();
 	
 	private static final long serialVersionUID = 1361747962180404066L;
@@ -21,8 +21,11 @@ public class pamlFile extends File {
 	public pamlFile(String arg0,evolution.positions positions) throws FileNotFoundException {
 		super(arg0);
 		int blockPos;
+		int blockProb;
+		int blockProb_2nd;
+		int blockProb_3rd;
+		String blockRef;
 		String[] split;
-		// TODO Auto-generated constructor stub
 		Scanner sc = new Scanner(this);
 		boolean BEBTable=false;
 		String currentLine=sc.nextLine().trim();
@@ -33,21 +36,26 @@ public class pamlFile extends File {
 					break;
 				}else{
 					split=currentLine.split(" ");
-					//0=> pos
-					//2=> prob
-					blockPos=(Integer.parseInt(split[0])-1)*3;
-					alnPosRef.put(positions.getPosFromBlock(blockPos),positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0]))));
-					alnPosRef.put(positions.getPosFromBlock(blockPos)+1,positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0]))));
-					alnPosRef.put(positions.getPosFromBlock(blockPos)+2,positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0]))));
-					alnPosProb.put(positions.getPosFromBlock(blockPos),Double.parseDouble(split[2].substring(0, 4))*100);
-					alnPosProb.put(positions.getPosFromBlock(blockPos)+1,Double.parseDouble(split[2].substring(0, 4))*100);
-					alnPosProb.put(positions.getPosFromBlock(blockPos)+2,Double.parseDouble(split[2].substring(0, 4))*100);
+					//1=> pos
+					//4-5=> prob
+					blockProb=(int) Math.floor((Double.parseDouble(split[6])*10)+(Double.parseDouble(split[7])*10));
+					if (blockProb>0){
+						blockPos=(Integer.parseInt(split[0])-1)*3;
+						blockRef=positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0])));
+						blockProb_2nd=(int) Math.floor((Double.parseDouble(split[6])*100)+(Double.parseDouble(split[7])*100))-10*blockProb;
+						blockProb_3rd=(int) Math.floor((Double.parseDouble(split[6])*1000)+(Double.parseDouble(split[7])*1000))-10*blockProb_2nd-100*blockProb;
+						alnPosRef.put(positions.getPosFromBlock(blockPos),blockRef);
+						alnPosRef.put(positions.getPosFromBlock(blockPos)+1,blockRef);
+						alnPosRef.put(positions.getPosFromBlock(blockPos)+2,blockRef);
+						alnPosProb.put(positions.getPosFromBlock(blockPos),blockProb);
+						alnPosProb.put(positions.getPosFromBlock(blockPos)+1,blockProb_2nd);
+						alnPosProb.put(positions.getPosFromBlock(blockPos)+2,blockProb_3rd);
+					}
 				}
-			}else if (currentLine.startsWith("Bayes Empirical Bayes (BEB) analysis ")){
-				currentLine=sc.nextLine().trim();
-				if (currentLine.startsWith("Positive sites for foreground lineages")){
-					BEBTable=true;
-				}
+			}else if (currentLine.startsWith("Bayes Empirical Bayes (BEB) probabilities")){
+				currentLine=sc.nextLine();
+				currentLine=sc.nextLine();
+				BEBTable=true;
 			}
 		}
 		sc.close();
@@ -67,24 +75,16 @@ public class pamlFile extends File {
 			iter=1;
 		}
 		selectedHTML= new String[alnLen];
+		int Prob;
 		String color;
-		Double Prob;	
 		StringBuilder builder = new StringBuilder();
 		builder.append("<html><span style=\"text-align: right;\">");
+		
 		for (int i=0;(i<alnLen);i+=iter){
 			if (alnPosProb.keySet().contains(i)){
 				Prob=alnPosProb.get(i);
-				if (Prob>50 && Prob<80){
-					color="green";
-				} else if(Prob>80 && Prob<90){
-					color="orange";
-				}else if(Prob>90){
-					color="red";
-				}else{
-					color="grey";
-				}
-				;
-				builder.append("<b style=\"color: "+color+"\">"+tools.myCST.FILLARROW+"</b>");
+				color="black";
+				builder.append("<b style=\"color: "+color+"\">"+Prob+"</b>");
 			}else{
 				color=tools.myCST.backColorString;
 				builder.append("<b style=\"color: "+color+"\">"+tools.myCST.BLOCK+"</b>");

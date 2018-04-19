@@ -166,28 +166,40 @@ public class VisualizeFrame extends JFrame {
 	 * @param scrolledTxtpnSelection 
 	 */
 
-	public VisualizeFrame(String alignmentPath, String speciesPath,String pamlPath,String positionsPath,String uniprotPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID) throws FileNotFoundException {
+	public VisualizeFrame(String alignmentPath, String treePath,String pamlPath,String exonBedPath,String blockBedPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID, String ref_species) throws FileNotFoundException {
+		System.out.println("step0");
+		database.UniprotWebFasta webFasta;
 		
-		database.UniprotWebFasta webFasta;	
+		
+		treeFile=new evolution.treeFile(treePath);
+		String[] species = treeFile.getSpecies();
+		System.out.println("step1");
 		
 		frametitle=geneName + " - " + input_seqType;
 		//GENETEST=geneName;
 		setTitle(frametitle);
 		seqType=input_seqType;
 		alignment.alnFile alnFile= new alignment.alnFile(alignmentPath);
+		System.out.println("step2");
+		
+		
+		
 		aln= new alignment.Alignment(alnFile.readALN(),genCode);
+		System.out.println("step3");
 		try {
+			System.out.println("step4");
 			webFasta = new database.UniprotWebFasta("http://www.uniprot.org/uniprot/"+UniprotID+".fasta");
 			//System.out.println(aln.getSeqRef());
 			//System.out.println(webFasta.getSeq());
 
-			if (!aln.getSeqRef().startsWith(webFasta.getSeq())){
+			if (!aln.getSeqRef(ref_species).startsWith(webFasta.getSeq())){
 				String errMessage = "\"BE CAREFULL\"\n"
 	    		        + "The Uniprot Sequence does not match with the one in the alignment\n"
 	    		        + "Uniprot datas are likely to be false! ;-) ";
 	    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "Database Error",
 	    		        JOptionPane.WARNING_MESSAGE);
 			}
+			System.out.println("step5");
 
 		} catch (IOException e) {
 
@@ -198,15 +210,16 @@ public class VisualizeFrame extends JFrame {
     		        JOptionPane.WARNING_MESSAGE);
 
 		}
-		treeFile=new evolution.treeFile(speciesPath);
-		String[] species = treeFile.getSpecies();
 		
-
+		
+		System.out.println("step6");
 		aln.buildHTML(seqType, species);
-
-		positions= new evolution.positions(positionsPath,aln.getSize(),seqType);
+		System.out.println("step7");
+		positions= new evolution.positions(exonBedPath,blockBedPath,aln.get_ref_dna(ref_species));
+		System.out.println("step8");
 
 		selection = new evolution.pamlFile(pamlPath,positions);
+		System.out.println("step9");
 
 		//featureAPI = new tools.featureAPI(uniprotPath,positions);
 		try {

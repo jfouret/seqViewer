@@ -25,12 +25,16 @@ public class Alignment {
 	private HashMap<String,String[]> codText = new HashMap<String,String[]>() ;
 	private HashMap<String,String[]> aaText = new HashMap<String,String[]>() ;
 	
-	public String getSeqRef(){
+	public String getSeqRef(String ref){
 		StringBuilder builder = new StringBuilder();
-		for (String aa : aaText.get("hg19")) {
+		for (String aa : aaText.get(ref)) {
 			builder.append(aa);
 		}
 		return (builder.toString()).replaceAll("-", "");
+	}
+	
+	public String[] get_ref_dna(String ref){
+		return(nuclText.get(ref));
 	}
 	
 	public Alignment(HashMap<String,String> Input_Sequences, genCode Input_geneticCode) {

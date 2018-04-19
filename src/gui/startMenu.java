@@ -18,6 +18,7 @@ import java.io.File;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,31 +29,31 @@ import java.awt.Label;
 import javax.swing.JTextPane;
 public class startMenu extends JFrame {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7496753617994981739L;
 	private JPanel contentPane;
 	private JTextField textFieldGenePath;
 	private JComboBox<String> seqTypeBox;
-	private String suffix_pamlPath= "/out";
-	private String suffix_speciesPath= "/../tree.nh";
-	private String suffix_alignmentPath= "/codon_aln.fa";
-	private String suffix_positionsPath= "/posDict.tab";
-	private String suffix_uniprotPath= "/uniprot.tab";
-	private String suffix_namePath= "/name.tab";
+	private String suffix_pamlPath= "/rst";
+	private String suffix_treePath= "/tree.nh";
+	private String suffix_alignmentPath= "/aln.fa";
+	private String suffix_exonsPath= "/exons.bed";
+	private String suffix_blockPath= "/block.bed";
+	private String suffix_spidPath= "/spid.txt";
+	private String spid;
+	private String ref_species;
+	
 	/** 
 	 * Definition of tools to choose species file and alignment file
 	 */
+	
 	String alignmentPath = new String();
-	String speciesPath = new String();
+	String treePath = new String();
 	String pamlPath = new String();
-	String positionsPath = new String();
-	String uniprotPath = new String();
-	String namePath = new String();
+	String exonsPath = new String();
+	String blockPath = new String();
+	String spidPath = new String();
 	String WorkDir = ".";
 	String genCodeChoice = "standard";
-	database.nameFile nameFile;
 	private JTextField txtGenename;
 	private JTextField textRefSeq;
 	private JTextField textUniProt;
@@ -60,12 +61,13 @@ public class startMenu extends JFrame {
 	
 	public void SetPaths(String Input_Path){
 		alignmentPath=Input_Path+suffix_alignmentPath;
-		speciesPath=Input_Path+suffix_speciesPath;
+		treePath=Input_Path+suffix_treePath;
 		pamlPath=Input_Path+suffix_pamlPath;
-		positionsPath=Input_Path+suffix_positionsPath;
-		uniprotPath=Input_Path+suffix_uniprotPath;
-		namePath=Input_Path+suffix_namePath;
+		exonsPath=Input_Path+suffix_exonsPath;
+		blockPath=Input_Path+suffix_blockPath;
+		spidPath=Input_Path+suffix_spidPath;
 		textFieldGenePath.setText(Input_Path);
+		
 		Pattern pattern = Pattern.compile(".*\\\\(.*?)$");
 		Matcher matcher = pattern.matcher(Input_Path);
 		if (matcher.find())
@@ -80,19 +82,22 @@ public class startMenu extends JFrame {
 				txtGenename.setText("GeneName");
 			}
 		}
+		
+		File spidFile=new File(spidPath);
+		Scanner sc;
+
 		try {
-			nameFile= new database.nameFile(namePath);
-			textRefSeq.setText(nameFile.getRefSeq());
-			textUniProt.setText(nameFile.getUniprot());
-			textkgID.setText(nameFile.getKgID());
+			sc = new Scanner(spidFile);
+			String[] split = sc.nextLine().trim().split(";");
+			spid=split[0];
+			ref_species=split[1];
+			sc.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			textRefSeq.setText("No name.tab file");
-			textUniProt.setText("No name.tab file");
-			textkgID.setText("No name.tab file");
 		}
-		
-		
+		textRefSeq.setText("");
+		textUniProt.setText(spid);
+		textkgID.setText("");
 	}
 	/**
 	 * Create the frame.
@@ -168,11 +173,11 @@ public class startMenu extends JFrame {
 		btnVisualize.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
 		          String alignmentPath = startMenu.this.alignmentPath;
-		          String speciesPath = startMenu.this.speciesPath;
+		          String treePath = startMenu.this.treePath;
 		          alignment.genCode chosenGenCode= new alignment.genCode(startMenu.this.genCodeChoice);
 		          String seqType= startMenu.this.seqTypeBox.getSelectedItem().toString();
 		          try{
-		        	  gui.VisualizeFrame VisualizeFrame = new gui.VisualizeFrame(alignmentPath,speciesPath,pamlPath,positionsPath,uniprotPath,chosenGenCode,seqType,txtGenename.getText(),nameFile.getUniprot());
+		        	  gui.VisualizeFrame VisualizeFrame = new gui.VisualizeFrame(alignmentPath,treePath,pamlPath,exonsPath,blockPath,chosenGenCode,seqType,txtGenename.getText(),spid,ref_species);
 			          VisualizeFrame.setVisible(true);
 			          VisualizeFrame.setDefaultCloseOperation(gui.VisualizeFrame.DISPOSE_ON_CLOSE);
 		          }catch(FileNotFoundException e){

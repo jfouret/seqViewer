@@ -1,90 +1,61 @@
 package evolution;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class positions {
+	
 	private String[] exons;
-	private String[] refPos;
-	private boolean[] Cblocks;
 	private Integer[] ref2aln;
 	private String[] aln2ref;
 	private Integer[] block2aln;
 	
-	//foo.toArray(new Integer[.size()]);
-	
-	public String buildHTML(String seqType){
-		int iter;
-		if (seqType=="Amino acids") {
-			iter=3;
-		}else {
-			iter=1;
-		}
-		StringBuilder builder = new StringBuilder();
-		builder.append("<html><span>");
-		double test0;
-		for (int i=0;i<exons.length;i+=iter){
-			test0=Integer.parseInt(exons[i]) % 2;
-			//System.out.println(test0);
-			if (test0==0){
-				//System.out.println("EVEN");
-				builder.append("<b style=\"color: #A52A2A;\">"+tools.myCST.BLOCK+"</b>");
-			}else{
-				//System.out.println("ODD");
-				builder.append("<b style=\"color: #DEB887;\">"+tools.myCST.BLOCK+"</b>");
-			}
-		}
-		builder.append("</span></html>");
-		return builder.toString();
-	}
-	
-	public positions(String posPath,int Input_alnLen,String seqType) throws FileNotFoundException {
-		int alnLen;
-		if (seqType=="Nucleotids"){
-			alnLen=Input_alnLen;
-		}else{
-			alnLen=Input_alnLen*3;
-		}
-		//work in 0-based ==> minus 1 everywhere 
-		exons= new String[alnLen];
-		refPos= new String[alnLen];
-		Cblocks = new boolean[alnLen];
-		aln2ref = new String[alnLen];
-		ArrayList<Integer> Tref2aln= new ArrayList<Integer>();
-		ArrayList<Integer> Tblock2aln= new ArrayList<Integer>();
-		File posFile= new File(posPath);
-		Scanner sc = new Scanner(posFile);
-		//pass the first line
-		String currentLine=sc.nextLine().trim();
-		String[] split;
+	//public positions(String posPath,int Input_alnLen,String seqType) throws FileNotFoundException {
 		
-		int i=-1;
-		while(sc.hasNext()){
-			i+=1;
-			currentLine=sc.nextLine().trim();
-			split=currentLine.split("\t");
-			//ref=0
-			//aln=1
-			//exon=2
-			//block=3
-			exons[i]=split[2];
-			aln2ref[Integer.parseInt(split[1])-1]=split[0];
-			refPos[i]=split[0];
-			if (!split[3].startsWith(".")){
-				Cblocks[i]=true;
-				Tblock2aln.add(Integer.parseInt(split[1])-1);
+	public positions(String exonBedPath,String blockBedPath,String[] ref_dna) throws FileNotFoundException {	
+		
+		int alnLen=ref_dna.length;
+		
+		ArrayList<Integer> Tref2aln= new ArrayList<Integer>();
+		int refPos=0;
+		aln2ref=new String[alnLen];
+		for (int i=0 ; i < ref_dna.length ; i++ ){
+			if ( ref_dna[i].equals("-") | ref_dna[i]=="!" | ref_dna[i]=="*" | ref_dna[i]=="?"){
+				aln2ref[i]=".";
 			}else{
-				Cblocks[i]=false;
-			}
-			if(!split[0].startsWith(".")){
-				Tref2aln.add(Integer.parseInt(split[1])-1);
+				Tref2aln.add(i);
+				System.out.println(ref_dna[i]+"|"+refPos+"=ref2aln>"+i);
+				aln2ref[i]=String.valueOf(refPos);
+				refPos++;
 			}
 		}
+		
 		ref2aln=Tref2aln.toArray(new Integer[Tref2aln.size()]);
-		block2aln=Tblock2aln.toArray(new Integer[Tblock2aln.size()]);
-		sc.close();
+		
+		BedFile exonBedFile=new BedFile(exonBedPath);
+		int exonNum=1;
+		exons=new String[alnLen];
+		
+		for (int i=0 ; i < exonBedFile.length() ; i++ ){
+			for (int pos=ref2aln[exonBedFile.get(i).start] ; pos<ref2aln[exonBedFile.get(i).end-1]+1 ; pos++){
+				
+				exons[pos]=String.valueOf(exonNum);
+			}
+			exonNum++;
+		}
+				
+		BedFile blockBedFile=new BedFile(blockBedPath); // WARNING BASED ON AMINO ACID
+		ArrayList<Integer> block2aln_array=new ArrayList<Integer>();
+		for (int i=0 ; i < blockBedFile.length() ; i++ ){
+			for (int pos=blockBedFile.get(i).start*3 ; pos<blockBedFile.get(i).end*3 ; pos++){
+				block2aln_array.add(pos);
+			}
+		}
+		
+		block2aln=block2aln_array.toArray(new Integer[block2aln_array.size()]);
+		
+		
+		
 	}
 	
 	// Default pos is aln
@@ -106,13 +77,42 @@ public class positions {
 	public String[] getExons(){
 		return(exons);
 	}
-	public boolean[] getBlocks(){
-		return(Cblocks);
+	
+	public String buildHTML(String seqType){
+		int iter;
+		if (seqType=="Amino acids") {
+			iter=3;
+		}else {
+			iter=1;
+		}
+		StringBuilder builder = new StringBuilder();
+		builder.append("<html><span>");
+		double test0;
+		for (int i=0;i<exons.length;i+=iter){
+			try {
+				test0=Integer.parseInt(exons[i]) % 2;
+				//System.out.println(test0);
+				if (test0==0){
+					//System.out.println("EVEN");
+					builder.append("<b style=\"color: #A52A2A;\">"+tools.myCST.BLOCK+"</b>");
+				}else{
+					//System.out.println("ODD");
+					builder.append("<b style=\"color: #DEB887;\">"+tools.myCST.BLOCK+"</b>");
+				}
+			}catch (java.lang.NumberFormatException e) {
+					builder.append("<b style=\"color: #000000;\">"+tools.myCST.BLOCK+"</b>");
+			}
+		}
+		builder.append("</span></html>");
+		return builder.toString();
 	}
+	
+	
 	
 	public String getPos(String seqType,int nCol) {
 		int alnLen;
 		String pos;
+		String posToWrite;
 		int fact;
 		if (seqType=="Nucleotids"){
 			alnLen=nCol;
@@ -127,12 +127,13 @@ public class positions {
 		StringBuilder builder=new StringBuilder();
 		builder.append("1   .    ");
 		for (int i = fact*10; i < alnLen ; i+=fact*10) {
-			pos =aln2ref[i-1];
+			pos =aln2ref[i];
 			if (pos.equals(".")) {
 				builder.append("-    ");
 			}else {
-				builder.append(String.valueOf((int)Integer.parseInt(pos)/fact));
-				builder.append(String.join("", Collections.nCopies(5-String.valueOf((int)Integer.parseInt(pos)/fact).length(), " ")));
+				posToWrite=String.valueOf((int)Integer.parseInt(pos)/fact);
+				builder.append(posToWrite);
+				builder.append(String.join("", Collections.nCopies(5-posToWrite.length(), " ")));
 			}
 			builder.append(".    ");
 		}

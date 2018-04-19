@@ -25,6 +25,7 @@ def parse_nw(nw):
 		return(nw)
 
 def disruptree(input):
+	input=re.sub(" ","",input)
 	clades=dict()
 	nw=input.rstrip().rstrip(';')
 	re_leaf=re.compile('([^#,\(\)]{1}[^,\(\)]+)')
