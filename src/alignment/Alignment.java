@@ -39,6 +39,7 @@ public class Alignment {
 	
 	public Alignment(HashMap<String,String> Input_Sequences, genCode Input_geneticCode) {
 		// initiate colors
+		System.out.println("ALN - TRANSLATE");
 		//seqhg19=Input_Sequences.get("hg19").replaceAll("-", "");
 		geneticCode=Input_geneticCode;
 		Sequences=Input_Sequences; //wash it ...
@@ -62,7 +63,9 @@ public class Alignment {
 		    	codon+=nucleotid;
 		    	charCounter+=1;
 		    	if ((charCounter==3)  && (codon.length()==3)){
+		    		System.out.println("ALN1 - TRANSLATE");
 		    		aaArray[posCounter]=geneticCode.translate(codon);
+		    		System.out.println("ALN2 - TRANSLATE");
 		    		codArray[posCounter]=codon;
 		    		//System.out.println("Translating codon "+codon+" in aa "+geneticCode.translate(codon)+"." );
 		    		codon="";
@@ -71,7 +74,9 @@ public class Alignment {
 		    	}
 		    }
 		    if (codon.length()==3){
+		    	System.out.println("ALN3 - TRANSLATE");
 		    	aaArray[posCounter]=geneticCode.translate(codon);
+		    	System.out.println("ALN4 - TRANSLATE");
 		    	codArray[posCounter]=codon;
 		    }else if (codon.length()!=0){
 		    	//System.out.println("WTF");
