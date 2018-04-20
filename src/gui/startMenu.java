@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import java.awt.Label;
 import javax.swing.JTextPane;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
 public class startMenu extends JFrame {
 	
 	private static final long serialVersionUID = 7496753617994981739L;
@@ -39,6 +41,7 @@ public class startMenu extends JFrame {
 	private String suffix_exonsPath= "/exons.bed";
 	private String suffix_blockPath= "/block.bed";
 	private String suffix_spidPath= "/spid.txt";
+	private String suffix_database= "/table.txt";
 	private String spid;
 	private String ref_species;
 	
@@ -52,12 +55,10 @@ public class startMenu extends JFrame {
 	String exonsPath = new String();
 	String blockPath = new String();
 	String spidPath = new String();
+	String databasePath = new String();
 	String WorkDir = ".";
 	String genCodeChoice = "standard";
-	private JTextField txtGenename;
-	private JTextField textRefSeq;
-	private JTextField textUniProt;
-	private JTextField textkgID;
+	private JTable table;
 	
 	public void SetPaths(String Input_Path){
 		alignmentPath=Input_Path+suffix_alignmentPath;
@@ -104,7 +105,7 @@ public class startMenu extends JFrame {
 	 */
 	public startMenu() {	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 405);
+		setBounds(100, 100, 818, 535);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -112,13 +113,9 @@ public class startMenu extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnLoadGene = new JButton("Load");
-		JButton btnDefaultFolder = new JButton("Set default folder");
-		btnDefaultFolder.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		
-		btnLoadGene.setBounds(15, 88, 105, 23);
-		btnDefaultFolder.setBounds(15, 114, 145, 13);
+		btnLoadGene.setBounds(46, 88, 105, 23);
 		contentPane.add(btnLoadGene);
-		contentPane.add(btnDefaultFolder);
 		
 		
 		/**
@@ -128,7 +125,7 @@ public class startMenu extends JFrame {
 		btnLoadGene.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
 		    	  JFileChooser fileChooser = new JFileChooser(startMenu.this.WorkDir);
-		    	  fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		    	  //fileChooser.setFileSelectionMode(JFileChooser.);
 		    	fileChooser.setAcceptAllFileFilterUsed(false);
 		        int returnValue = fileChooser.showOpenDialog(null);
 		        if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -138,36 +135,12 @@ public class startMenu extends JFrame {
 		      }
 		    });
 		
-		btnDefaultFolder.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent ae) {
-		    	JFileChooser fileChooser = new JFileChooser();
-		    	fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		        //
-		        // disable the "All files" option.
-		        //
-		    	fileChooser.setAcceptAllFileFilterUsed(false);
-		        int returnValue = fileChooser.showOpenDialog(null);
-		        if (returnValue == JFileChooser.APPROVE_OPTION) {
-		          File selectedFile = fileChooser.getSelectedFile();
-		          startMenu.this.WorkDir=selectedFile.getAbsolutePath();
-		        }
-		      }
-		    });
-
-		JSeparator separator = new JSeparator();
-		separator.setBounds(22, 46, 389, 13);
-		contentPane.add(separator);
-		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(22, 129, 389, 2);
+		separator_1.setBounds(22, 129, 748, 2);
 		contentPane.add(separator_1);
 		
-		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(22, 214, 389, 2);
-		contentPane.add(separator_2);
-		
 		JButton btnVisualize = new JButton("Visualize");
-		btnVisualize.setBounds(66, 261, 168, 26);
+		btnVisualize.setBounds(609, 142, 161, 26);
 		contentPane.add(btnVisualize);
 		
 		btnVisualize.addActionListener(new ActionListener() {
@@ -194,47 +167,31 @@ public class startMenu extends JFrame {
 		frmtdtxtfldLoadAMultiple.setEditable(false);
 		frmtdtxtfldLoadAMultiple.setFont(new Font("Tahoma", Font.BOLD, 12));
 		frmtdtxtfldLoadAMultiple.setHorizontalAlignment(SwingConstants.CENTER);
-		frmtdtxtfldLoadAMultiple.setText("Load the gene folder");
+		frmtdtxtfldLoadAMultiple.setText("Load the database");
 		frmtdtxtfldLoadAMultiple.setBackground(new Color(255, 255, 255));
-		frmtdtxtfldLoadAMultiple.setBounds(32, 54, 366, 23);
+		frmtdtxtfldLoadAMultiple.setBounds(165, 54, 366, 23);
 		contentPane.add(frmtdtxtfldLoadAMultiple);
 		
 		textFieldGenePath = new JTextField();
-		textFieldGenePath.setBounds(125, 88, 299, 23);
+		textFieldGenePath.setBounds(210, 88, 272, 23);
 		contentPane.add(textFieldGenePath);
 		textFieldGenePath.setColumns(10);
-		
-		JLabel lblName = new JLabel("Name :");
-		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblName.setBounds(10, 142, 96, 23);
-		contentPane.add(lblName);
-		
-		txtGenename = new JTextField();
-		txtGenename.setText("geneName");
-		txtGenename.setBounds(116, 142, 86, 23);
-		contentPane.add(txtGenename);
-		txtGenename.setColumns(10);
-		
-		Label label = new Label("Alignment Type:");
-		label.setAlignment(Label.RIGHT);
-		label.setBounds(42, 232, 105, 23);
-		contentPane.add(label);
 
 		ClassLoader classLoader = getClass().getClassLoader();
 		JLabel v3dimgLab = new JLabel();
-		v3dimgLab.setBounds(10, 296, 155, 56);
+		v3dimgLab.setBounds(0, 0, 155, 56);
 		ImageIcon v3dimg = new ImageIcon(new ImageIcon(classLoader.getResource("ressources/viroscan.jpg")).getImage().getScaledInstance(v3dimgLab.getWidth(), v3dimgLab.getHeight(), Image.SCALE_DEFAULT));
 		v3dimgLab.setIcon(v3dimg);
 		contentPane.add(v3dimgLab);
 		
 		JLabel ciriimgLab = new JLabel();
-		ciriimgLab.setBounds(175, 298, 59, 56);
+		ciriimgLab.setBounds(743, 3, 59, 56);
 		ImageIcon ciriimg = new ImageIcon(new ImageIcon(classLoader.getResource("ressources/CIRI.png")).getImage().getScaledInstance(ciriimgLab.getWidth(), ciriimgLab.getHeight(), Image.SCALE_DEFAULT));
 		ciriimgLab.setIcon(ciriimg);
 		contentPane.add(ciriimgLab);
 		
 		seqTypeBox = new JComboBox<String>();
-		seqTypeBox.setBounds(156, 232, 161, 23);
+		seqTypeBox.setBounds(424, 144, 161, 23);
 		seqTypeBox.addItem("Nucleotids");
 		seqTypeBox.addItem("Amino acids");
 		seqTypeBox.addItem("Codons");
@@ -246,48 +203,24 @@ public class startMenu extends JFrame {
 		lblTitle.setBackground(new Color(153, 255, 153));
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblTitle.setBounds(5, 5, 420, 44);
+		lblTitle.setBounds(165, -1, 420, 44);
 		contentPane.add(lblTitle);
 				
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
 		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 1.4.0 </div></html>");
-		txtpnHuh.setBounds(237, 298, 197, 54);
+		txtpnHuh.setBounds(563, 57, 197, 54);
 		contentPane.add(txtpnHuh);
 		
-		JLabel lblRefseqId = new JLabel("RefSeq ID :");
-		lblRefseqId.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblRefseqId.setBounds(212, 142, 86, 23);
-		contentPane.add(lblRefseqId);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(800, 182, -802, 314);
+		contentPane.add(scrollPane);
 		
-		textRefSeq = new JTextField();
-		textRefSeq.setText("");
-		textRefSeq.setColumns(10);
-		textRefSeq.setBounds(308, 142, 86, 23);
-		contentPane.add(textRefSeq);
+		table = new JTable();
+		table.setBounds(0, 182, 802, 314);
 		
-		JLabel lblUniprotId = new JLabel("UniProt ID :");
-		lblUniprotId.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblUniprotId.setBounds(212, 176, 86, 23);
-		contentPane.add(lblUniprotId);
-		
-		textUniProt = new JTextField();
-		textUniProt.setText("");
-		textUniProt.setColumns(10);
-		textUniProt.setBounds(308, 176, 86, 23);
-		contentPane.add(textUniProt);
-		
-		JLabel lblKnowngeneId = new JLabel("KnownGene ID :");
-		lblKnowngeneId.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblKnowngeneId.setBounds(10, 176, 96, 23);
-		contentPane.add(lblKnowngeneId);
-		
-		textkgID = new JTextField();
-		textkgID.setText("");
-		textkgID.setColumns(10);
-		textkgID.setBounds(116, 176, 86, 23);
-		contentPane.add(textkgID);
+		JScrollPane.add(table);
 		
 	}
 }
