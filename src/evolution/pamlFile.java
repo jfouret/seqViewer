@@ -1,11 +1,10 @@
 package evolution;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Scanner;
 
-public class pamlFile extends File {
+public class pamlFile {
 	/**
 	 * 
 	 */
@@ -15,22 +14,18 @@ public class pamlFile extends File {
 	public String currentToolTip = new String();
 	private HashMap<Integer,Integer> alnPosProb= new HashMap<Integer,Integer>();
 	private HashMap<Integer,String> alnPosRef= new HashMap<Integer,String>();
-	
-	private static final long serialVersionUID = 1361747962180404066L;
-	
-	public pamlFile(String arg0,evolution.positions positions) throws FileNotFoundException {
-		super(arg0);
+		
+	public pamlFile(BufferedReader bf,evolution.positions positions) throws IOException {
 		int blockPos;
 		int blockProb;
 		int blockProb_2nd;
 		int blockProb_3rd;
 		String blockRef;
 		String[] split;
-		Scanner sc = new Scanner(this);
 		boolean BEBTable=false;
-		String currentLine=sc.nextLine().trim();
-		while(sc.hasNext()){
-			currentLine=sc.nextLine().trim();
+		String currentLine=bf.readLine();
+		while(currentLine!=null){
+			currentLine=currentLine.trim();
 			if (BEBTable){
 				if (currentLine.length()==0){
 					break;
@@ -53,12 +48,12 @@ public class pamlFile extends File {
 					}
 				}
 			}else if (currentLine.startsWith("Bayes Empirical Bayes (BEB) probabilities")){
-				currentLine=sc.nextLine();
-				currentLine=sc.nextLine();
+				currentLine=bf.readLine();
+				currentLine=bf.readLine();
 				BEBTable=true;
 			}
+			currentLine=bf.readLine();
 		}
-		sc.close();
 	}
 
 	public String buildHTML(int input_alnLen,String seqType){

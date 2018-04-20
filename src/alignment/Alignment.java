@@ -9,10 +9,12 @@ import java.util.*;
  */
 
 public class Alignment {
+	
 	/**
 	 * @param Input_geneticCode the genetic code to be used to analyze the alignment
 	 * @param InputSequence name of the imported sequence as a key with the sequence as a value
 	 */
+	
 	private int nuclLen ; 
 	private int codLen ; 
 	private int nCol;
@@ -39,12 +41,13 @@ public class Alignment {
 	
 	public Alignment(HashMap<String,String> Input_Sequences, genCode Input_geneticCode) {
 		// initiate colors
-		System.out.println("ALN - TRANSLATE");
+
 		//seqhg19=Input_Sequences.get("hg19").replaceAll("-", "");
 		geneticCode=Input_geneticCode;
 		Sequences=Input_Sequences; //wash it ...
 		nuclLen = Sequences.get(Sequences.keySet().toArray()[0]).length();
 		codLen = nuclLen / 3;
+		System.out.println("LENGTH:"+codLen);
 		String species ;
 		String seq ;
 		int charCounter = 0;
@@ -53,33 +56,38 @@ public class Alignment {
 		String[] codArray = new String[codLen];
 		String[] aaArray = new String[codLen];
 		for (HashMap.Entry<String, String> entry : Sequences.entrySet()) {
-			//System.out.println("OK entering loop");
+
 		    species = entry.getKey();
 		    seq = entry.getValue();
-		    //System.out.println("ENTRY:"+species+"="+seq);
+		    
+		    System.out.println("KEY:"+species);
+		    System.out.println("SEQ:"+seq);
+		    
+
 		    nuclText.put(species,seq.split("")); //TODO test is the split is OK
-		    //System.out.println("ENTRY_length:"+nuclText.get(species).length);
+
 		    for ( String nucleotid : nuclText.get(species) ){
 		    	codon+=nucleotid;
 		    	charCounter+=1;
 		    	if ((charCounter==3)  && (codon.length()==3)){
-		    		System.out.println("ALN1 - TRANSLATE");
+
+
 		    		aaArray[posCounter]=geneticCode.translate(codon);
-		    		System.out.println("ALN2 - TRANSLATE");
+
 		    		codArray[posCounter]=codon;
-		    		//System.out.println("Translating codon "+codon+" in aa "+geneticCode.translate(codon)+"." );
+
 		    		codon="";
 		    		charCounter=0;
 		    		posCounter+=1;
 		    	}
 		    }
 		    if (codon.length()==3){
-		    	System.out.println("ALN3 - TRANSLATE");
+
 		    	aaArray[posCounter]=geneticCode.translate(codon);
-		    	System.out.println("ALN4 - TRANSLATE");
+
 		    	codArray[posCounter]=codon;
 		    }else if (codon.length()!=0){
-		    	//System.out.println("WTF");
+
 		    }
 		    codon="";
 		    charCounter=0;
@@ -107,13 +115,13 @@ public class Alignment {
 		// When sequences are stored in char
 		String letter;
 		String color;
-		//System.out.println("OK entering the if statement");
+
 		StringBuilder builder = new StringBuilder();
 		builder.append("<html><span >");
 		for (String spec: species ) {
-			//System.out.println("OK entering the for statement on species");
+
 			for ( int i = 0; i < letterText.get(spec).length ; i+=1){	
-				//System.out.println("OK entering the for statement on letter");
+
 				letter=letterText.get(spec)[i];
 				if (seqType=="Codons") {
 					color=letterColor.get(geneticCode.translate(letter));

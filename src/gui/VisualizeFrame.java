@@ -16,10 +16,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.event.*;
+
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.zip.ZipFile;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -66,6 +70,7 @@ public class VisualizeFrame extends JFrame {
 	private JScrollPane scrollFeatPane;
 	private JPanel FeatPane ;
 	private JScrollBar featBar;
+	private ZipFile database;
 	
 	private JLabel[] featLabelArray;
 	
@@ -166,12 +171,31 @@ public class VisualizeFrame extends JFrame {
 	 * @param scrolledTxtpnSelection 
 	 */
 
-	public VisualizeFrame(String alignmentPath, String treePath,String pamlPath,String exonBedPath,String blockBedPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID, String ref_species) throws FileNotFoundException {
-		System.out.println("step0");
+	public BufferedReader getBufferedReader_fromDB(String entryName){
+		BufferedReader bf=null;
+		try {
+			bf=new BufferedReader(new InputStreamReader(database.getInputStream(database.getEntry(entryName))));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return(bf);
+	}
+	
+	
+	public VisualizeFrame(String alignmentPath, String treePath,String pamlPath,String exonBedPath,String blockBedPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID, String ref_species,ZipFile in_database) throws FileNotFoundException {
+		
+		database=in_database;
+		
+		System.out.println(treePath);
 		database.UniprotWebFasta webFasta;
 		
 		
-		treeFile=new evolution.treeFile(treePath);
+		try {
+			treeFile=new evolution.treeFile(this.getBufferedReader_fromDB(treePath));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		
 		String[] species = treeFile.getSpecies();
 		System.out.println("step1");
 		
@@ -179,7 +203,7 @@ public class VisualizeFrame extends JFrame {
 		//GENETEST=geneName;
 		setTitle(frametitle);
 		seqType=input_seqType;
-		alignment.alnFile alnFile= new alignment.alnFile(alignmentPath);
+		alignment.alnFile alnFile= new alignment.alnFile(this.getBufferedReader_fromDB(alignmentPath));
 		System.out.println("step2");
 		
 		
@@ -194,8 +218,16 @@ public class VisualizeFrame extends JFrame {
 
 			if (!aln.getSeqRef(ref_species).startsWith(webFasta.getSeq())){
 				String errMessage = "\"BE CAREFULL\"\n"
-	    		        + "The Uniprot Sequence does not match with the one in the alignment\n"
+	    		        + "The Uniprot Sequence does not match perfectly with the one in the alignment\n"
 	    		        + "Uniprot datas are likely to be false! ;-) ";
+	    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "Database Error",
+	    		        JOptionPane.WARNING_MESSAGE);
+			}
+
+			if (UniprotID.contains("-")){
+				String errMessage = "\"BE CAREFULL\"\n"
+	    		        + "The Best Match sequence used here is not the canonical\n"
+	    		        + "Uniprot feature coordinate are likely to be false! ;-) ";
 	    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "Database Error",
 	    		        JOptionPane.WARNING_MESSAGE);
 			}
@@ -210,16 +242,15 @@ public class VisualizeFrame extends JFrame {
     		        JOptionPane.WARNING_MESSAGE);
 
 		}
-		
-		
-		System.out.println("step6");
-		aln.buildHTML(seqType, species);
-		System.out.println("step7");
-		positions= new evolution.positions(exonBedPath,blockBedPath,aln.get_ref_dna(ref_species));
-		System.out.println("step8");
 
-		selection = new evolution.pamlFile(pamlPath,positions);
-		System.out.println("step9");
+		aln.buildHTML(seqType, species);
+		positions= new evolution.positions(this.getBufferedReader_fromDB(exonBedPath),this.getBufferedReader_fromDB(blockBedPath),aln.get_ref_dna(ref_species));
+
+		try {
+			selection = new evolution.pamlFile(this.getBufferedReader_fromDB(pamlPath),positions);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		//featureAPI = new tools.featureAPI(uniprotPath,positions);
 		try {

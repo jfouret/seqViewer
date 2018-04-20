@@ -29,7 +29,7 @@ public class genCode {
 	
 	
 	public genCode(String codeType) {
-		System.out.println("JE RENTRE DANS GENCODE");
+
 		if (codeType=="standard"){
 			aa="FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG".toCharArray();
 			base1="TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG".toCharArray();
@@ -63,7 +63,7 @@ public class genCode {
 	
 	
 	private String translate_1aa(String codon){
-		System.out.println("JE TRANLATE 1AA");
+
 		int i=0 ;
 		char[] codInChar=codon.toCharArray();
 		
@@ -85,7 +85,7 @@ public class genCode {
 	}
 	
 	public String translate(String codon){
-		System.out.println("JE TRANLATE AMBIGU");
+
 		char[] codInChar=codon.toCharArray();
 		ArrayList<String> codons = new ArrayList<String>();
 		ArrayList<String> newCodons;
@@ -105,7 +105,7 @@ public class genCode {
 			}
 			codons=newCodons;
 		}
-		System.out.println(String.join("|",codons));
+
 		String[] aa= new String[codons.size()];
 		
 		for (int j=0; j< codons.size();j++){

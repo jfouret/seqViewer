@@ -1,30 +1,25 @@
 package evolution;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class BedFile extends File {
+public class BedFile {
 	
-	private static final long serialVersionUID = 3309506459232402197L;
-
 	private BedEntry[] bedEntries;
 	
-	public BedFile(String arg0) {
-		super(arg0);
+	public BedFile(BufferedReader bf) {
 		try {
-			Scanner sc;
-			sc = new Scanner(this);
-			String currentLine=sc.nextLine().trim(); //pass the first line			
+			String currentLine=bf.readLine().trim(); //pass the first line			
 			ArrayList<BedEntry> bedList =new  ArrayList<BedEntry>();
-			while(sc.hasNext()){
-				currentLine=sc.nextLine().trim();
+			currentLine=bf.readLine();
+			while(currentLine!=null){
+				currentLine=currentLine.trim();
 				bedList.add(new BedEntry(currentLine)); 
+				currentLine=bf.readLine();
 				}
-			sc.close();
 			bedEntries=bedList.toArray(new BedEntry[bedList.size()]);
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

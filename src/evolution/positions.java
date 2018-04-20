@@ -1,4 +1,5 @@
 package evolution;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +13,7 @@ public class positions {
 	
 	//public positions(String posPath,int Input_alnLen,String seqType) throws FileNotFoundException {
 		
-	public positions(String exonBedPath,String blockBedPath,String[] ref_dna) throws FileNotFoundException {	
+	public positions(BufferedReader exonBedBuffer,BufferedReader blockBedBuffer,String[] ref_dna) throws FileNotFoundException {	
 		
 		int alnLen=ref_dna.length;
 		
@@ -32,7 +33,7 @@ public class positions {
 		
 		ref2aln=Tref2aln.toArray(new Integer[Tref2aln.size()]);
 		
-		BedFile exonBedFile=new BedFile(exonBedPath);
+		BedFile exonBedFile=new BedFile(exonBedBuffer);
 		int exonNum=1;
 		exons=new String[alnLen];
 		
@@ -44,7 +45,7 @@ public class positions {
 			exonNum++;
 		}
 				
-		BedFile blockBedFile=new BedFile(blockBedPath); // WARNING BASED ON AMINO ACID
+		BedFile blockBedFile=new BedFile(blockBedBuffer); // WARNING BASED ON AMINO ACID
 		ArrayList<Integer> block2aln_array=new ArrayList<Integer>();
 		for (int i=0 ; i < blockBedFile.length() ; i++ ){
 			for (int pos=blockBedFile.get(i).start*3 ; pos<blockBedFile.get(i).end*3 ; pos++){

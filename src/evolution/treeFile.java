@@ -1,7 +1,6 @@
 package evolution;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,21 +14,17 @@ public class treeFile{
 	private String html_tree;
 	private String[] leafs;
 	private int size;
-	public treeFile(String pathname) {
-		System.out.println("step0.1");
+	public treeFile(BufferedReader bufferedReader) throws IOException {
+
 		StringBuilder stringBuilder = new StringBuilder();
 		String line = null;
-		System.out.println("step0.2");
+
 		
-		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(pathname));) {
-			while((line =bufferedReader.readLine())!=null){
-				stringBuilder.append(line).append("\n");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		while((line =bufferedReader.readLine())!=null){
+			stringBuilder.append(line).append("\n");
 		}
 		
-		System.out.println("step0.3");
+
 		content=stringBuilder.toString().trim();
 
 		/*
@@ -43,7 +38,7 @@ public class treeFile{
 		Pattern re_clade=Pattern.compile("^(.*)(#\\d+)$");
 		leafs=re_leaf.split(content);
 		
-		System.out.println(String.join("|", leafs));
+
 		
 		ArrayList<String> leaf_list=new ArrayList<String>();
 		for (int i=0 ; i < leafs.length; i++){
@@ -52,7 +47,7 @@ public class treeFile{
 			}
 		}
 		leafs=leaf_list.toArray(new String[leaf_list.size()]);
-				System.out.println(String.join("|", leafs));
+
 
 		ArrayList<String> node_list=new ArrayList<String>();
 		node_list.add(content);
@@ -63,10 +58,10 @@ public class treeFile{
 		while (node_list.size()!=0){
 			String node = node_list.remove(0);
 			divisions.put(node, this.parse_nw(node));
-			System.out.println("###");
-			System.out.println(node+"\n\n");
-			System.out.println(String.join("\n", divisions.get(node)));
-			System.out.println("###");
+
+
+
+
 			for (int i = 0 ; i <2 ; i++){
 				String child=divisions.get(node)[i];
 				Matcher m = re_clade.matcher(child);
@@ -193,7 +188,7 @@ public class treeFile{
 		 */
 		sb.append("</html>");
 		html_tree=sb.toString();
-		System.out.println(html_tree);
+
 	}
 
 	private String[] parse_nw(String nw){
