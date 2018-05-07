@@ -54,9 +54,6 @@ public class positions {
 		}
 		
 		block2aln=block2aln_array.toArray(new Integer[block2aln_array.size()]);
-		
-		
-		
 	}
 	
 	// Default pos is aln

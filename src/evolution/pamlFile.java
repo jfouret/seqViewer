@@ -36,7 +36,7 @@ public class pamlFile {
 					blockProb=(int) Math.floor((Double.parseDouble(split[6])*10)+(Double.parseDouble(split[7])*10));
 					if (blockProb>0){
 						blockPos=(Integer.parseInt(split[0])-1)*3;
-						blockRef=positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0])));
+						blockRef=positions.getRefFromAln(positions.getPosFromBlock(Integer.parseInt(split[0])-1));
 						blockProb_2nd=(int) Math.floor((Double.parseDouble(split[6])*100)+(Double.parseDouble(split[7])*100))-10*blockProb;
 						blockProb_3rd=(int) Math.floor((Double.parseDouble(split[6])*1000)+(Double.parseDouble(split[7])*1000))-10*blockProb_2nd-100*blockProb;
 						alnPosRef.put(positions.getPosFromBlock(blockPos),blockRef);
