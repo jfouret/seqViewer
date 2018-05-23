@@ -10,13 +10,16 @@ public class BedFile {
 	
 	public BedFile(BufferedReader bf) {
 		try {
-			String currentLine=bf.readLine().trim(); //pass the first line			
+			String currentLine=bf.readLine();
 			ArrayList<BedEntry> bedList =new  ArrayList<BedEntry>();
-			currentLine=bf.readLine();
 			while(currentLine!=null){
-				currentLine=currentLine.trim();
-				bedList.add(new BedEntry(currentLine)); 
-				currentLine=bf.readLine();
+				if (currentLine.startsWith("#")){
+					currentLine=bf.readLine(); // pass if comment
+				}else{
+					currentLine=currentLine.trim();
+					bedList.add(new BedEntry(currentLine)); 
+					currentLine=bf.readLine();					
+					}
 				}
 			bedEntries=bedList.toArray(new BedEntry[bedList.size()]);
 		} catch (IOException e) {

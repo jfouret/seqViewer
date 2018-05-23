@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
-
 import javax.swing.JComboBox;
 import javax.swing.JTextPane;
 import javax.swing.RowFilter;
@@ -249,7 +248,7 @@ public class startMenu extends JFrame {
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 2.0.0 </div></html>");
+		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 2.0.1 </div></html>");
 		txtpnHuh.setBounds(326, 54, 197, 54);
 		contentPane.add(txtpnHuh);
 		

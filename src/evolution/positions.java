@@ -25,7 +25,7 @@ public class positions {
 				aln2ref[i]=".";
 			}else{
 				Tref2aln.add(i);
-				System.out.println(ref_dna[i]+"|"+refPos+"=ref2aln>"+i);
+				//System.out.println(ref_dna[i]+"|"+refPos+"=ref2aln>"+i);
 				aln2ref[i]=String.valueOf(refPos);
 				refPos++;
 			}
@@ -47,12 +47,19 @@ public class positions {
 				
 		BedFile blockBedFile=new BedFile(blockBedBuffer); // WARNING BASED ON AMINO ACID
 		ArrayList<Integer> block2aln_array=new ArrayList<Integer>();
+		//int count=0;
 		for (int i=0 ; i < blockBedFile.length() ; i++ ){
+			
 			for (int pos=blockBedFile.get(i).start*3 ; pos<blockBedFile.get(i).end*3 ; pos++){
+				
+				System.out.println("BED_BLOCK:::::|start="+blockBedFile.get(i).start+"|end="+blockBedFile.get(i).end);
+				
 				block2aln_array.add(pos);
+				//System.out.println("BLOCK:"+count+"|ALN:"+pos);
+				//count++;
 			}
+			//System.out.println("######### BLOCK_CUT #########");
 		}
-		
 		block2aln=block2aln_array.toArray(new Integer[block2aln_array.size()]);
 	}
 	

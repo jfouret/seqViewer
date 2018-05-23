@@ -186,7 +186,7 @@ public class VisualizeFrame extends JFrame {
 		
 		database=in_database;
 		
-		System.out.println(treePath);
+		//System.out.println(treePath);
 		database.UniprotWebFasta webFasta;
 		
 		
@@ -197,21 +197,21 @@ public class VisualizeFrame extends JFrame {
 		}
 		
 		String[] species = treeFile.getSpecies();
-		System.out.println("step1");
+		//System.out.println("step1");
 		
 		frametitle=geneName + " - " + input_seqType;
 		//GENETEST=geneName;
 		setTitle(frametitle);
 		seqType=input_seqType;
 		alignment.alnFile alnFile= new alignment.alnFile(this.getBufferedReader_fromDB(alignmentPath));
-		System.out.println("step2");
+		//System.out.println("step2");
 		
 		
 		
 		aln= new alignment.Alignment(alnFile.readALN(),genCode);
-		System.out.println("step3");
+		//System.out.println("step3");
 		try {
-			System.out.println("step4");
+			//System.out.println("step4");
 			webFasta = new database.UniprotWebFasta("http://www.uniprot.org/uniprot/"+UniprotID+".fasta");
 			//System.out.println(aln.getSeqRef());
 			//System.out.println(webFasta.getSeq());
@@ -231,7 +231,7 @@ public class VisualizeFrame extends JFrame {
 	    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "Database Error",
 	    		        JOptionPane.WARNING_MESSAGE);
 			}
-			System.out.println("step5");
+			//System.out.println("step5");
 
 		} catch (IOException e) {
 
