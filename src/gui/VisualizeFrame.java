@@ -254,7 +254,7 @@ public class VisualizeFrame extends JFrame {
 
 		//featureAPI = new tools.featureAPI(uniprotPath,positions);
 		try {
-			featureAPI = new features.featureAPI(new URL("http://www.uniprot.org/uniprot/"+UniprotID+".txt"),positions);
+			featureAPI = new features.featureAPI(new URL("https://www.uniprot.org/uniprot/"+UniprotID+".txt"),positions);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
