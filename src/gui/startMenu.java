@@ -151,7 +151,7 @@ public class startMenu extends JFrame {
 		    	  int selected_row=table.convertRowIndexToModel(table.getSelectedRow());
 		    	  String gene_id = (String) table.getModel().getValueAt(selected_row, 0);
 		    	  spid = (String) table.getModel().getValueAt(selected_row, 1);
-		    	  String gene_name = (String) table.getModel().getValueAt(selected_row, 3);
+		    	  String gene_name = (String) table.getModel().getValueAt(selected_row, 2);
 		    	  startMenu.this.SetPaths(gene_id);
 		          alignment.genCode chosenGenCode= new alignment.genCode(startMenu.this.genCodeChoice);
 		          String seqType= startMenu.this.seqTypeBox.getSelectedItem().toString();
@@ -198,7 +198,7 @@ public class startMenu extends JFrame {
 				  }
 
 				  public void filterTable() {
-					  System.out.println("YO");
+					  //System.out.println("YO");
 					  TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
 					  RowFilter<DefaultTableModel, Object> rf = null;
 					  
@@ -248,7 +248,7 @@ public class startMenu extends JFrame {
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 2.0.1 </div></html>");
+		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 2.1.0 </div></html>");
 		txtpnHuh.setBounds(326, 54, 197, 54);
 		contentPane.add(txtpnHuh);
 		

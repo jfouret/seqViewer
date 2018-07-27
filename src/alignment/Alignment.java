@@ -47,7 +47,7 @@ public class Alignment {
 		Sequences=Input_Sequences; //wash it ...
 		nuclLen = Sequences.get(Sequences.keySet().toArray()[0]).length();
 		codLen = nuclLen / 3;
-		System.out.println("LENGTH:"+codLen);
+		//System.out.println("LENGTH:"+codLen);
 		String species ;
 		String seq ;
 		int charCounter = 0;
@@ -60,8 +60,8 @@ public class Alignment {
 		    species = entry.getKey();
 		    seq = entry.getValue();
 		    
-		    System.out.println("KEY:"+species);
-		    System.out.println("SEQ:"+seq);
+		    //System.out.println("KEY:"+species);
+		    //System.out.println("SEQ:"+seq);
 		    
 
 		    nuclText.put(species,seq.split("")); //TODO test is the split is OK

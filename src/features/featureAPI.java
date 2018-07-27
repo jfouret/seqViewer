@@ -23,7 +23,7 @@ public class featureAPI {
 	public HashMap<String,Boolean> availableType  = new HashMap<String, Boolean>();
 	public feature[] featureArray;
 	
-	public featureAPI(URL uniprotURL,positions positions) throws IOException {
+	public featureAPI(URL uniprotURL,positions positions,HashMap<Integer,Integer> uniprot2ref) throws IOException {
 		//super(arg0);
 		
         BufferedReader in = new BufferedReader(new InputStreamReader(uniprotURL.openStream()));
@@ -33,6 +33,7 @@ public class featureAPI {
 		String[] split;
 		ArrayList<feature> featureArrayList = new ArrayList<feature>();
 		Object value = null;
+		boolean keepFT = false;
 		while ((inputLine = in.readLine()) != null){
 			currentLine=inputLine.trim();
 			split=currentLine.split("  +");
@@ -42,23 +43,40 @@ public class featureAPI {
 			//3= end
 			//4++= Descritpion 
 			// step 1 add in featureArrayList
+			
+			
+			
 			if (split[0].equals("FT")){
 				if (featType.isClass(split[1])){
 					if (split[3].equals("?")){
 						split[3]=split[2];
 					}
+					String desc="";
+					int f_start=Integer.parseInt(split[2]);
+					int f_end=Integer.parseInt(split[3]);
 					if (split.length==5){
-						featureArrayList.add(new feature(split[1],Integer.parseInt(split[2])-1, Integer.parseInt(split[3]),split[4],featType,positions,iterNum));
+						desc=split[4];
+					}
+					
+					if (uniprot2ref.containsKey(f_start) &&  uniprot2ref.containsKey(f_end)){
+						keepFT=true;
+						f_start=uniprot2ref.get(f_start);
+						f_end=uniprot2ref.get(f_end);
 					}else{
-						featureArrayList.add(new feature(split[1],Integer.parseInt(split[2])-1, Integer.parseInt(split[3]),"",featType,positions,iterNum));
+						keepFT=false;
 					}
-					iterNum+=1; // num == position in feature array !!!
-					// step 2 check in availableType is the type is present ? add if not with False
-					value = availableType.get(split[1]);
-					if (value == null) {
-						availableType.put(split[1],false);
+					
+					if (keepFT){
+						featureArrayList.add(new feature(split[1],f_start-1, f_end,desc,featType,positions,iterNum));
+						iterNum+=1; // num == position in feature array !!!
+						// step 2 check in availableType is the type is present ? add if not with False
+						value = availableType.get(split[1]);
+						if (value == null) {
+							availableType.put(split[1],false);
+						}
 					}
-				}else{
+					
+				}else if (keepFT){
 					featureArrayList.get(iterNum-1).appendDescription("<br>"+split[1]);
 				}
 			}

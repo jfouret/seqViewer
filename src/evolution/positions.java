@@ -52,7 +52,7 @@ public class positions {
 			
 			for (int pos=blockBedFile.get(i).start*3 ; pos<blockBedFile.get(i).end*3 ; pos++){
 				
-				System.out.println("BED_BLOCK:::::|start="+blockBedFile.get(i).start+"|end="+blockBedFile.get(i).end);
+				//System.out.println("BED_BLOCK:::::|start="+blockBedFile.get(i).start+"|end="+blockBedFile.get(i).end);
 				
 				block2aln_array.add(pos);
 				//System.out.println("BLOCK:"+count+"|ALN:"+pos);

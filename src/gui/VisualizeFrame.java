@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +39,17 @@ import tools.myFONT;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+
+
+import jaligner.Alignment;
+import jaligner.Sequence;
+import jaligner.SmithWatermanGotoh;
+import jaligner.matrix.Matrix;
+import jaligner.matrix.MatrixLoader;
+import jaligner.matrix.MatrixLoaderException;
+import jaligner.util.SequenceParser;
+import jaligner.util.SequenceParserException;
+
 
 public class VisualizeFrame extends JFrame {
 	
@@ -98,6 +112,7 @@ public class VisualizeFrame extends JFrame {
 	private int ctrlHeight;
 	private int AvailViewSize;
 	private int alnHeight;
+	HashMap<Integer,Integer> uniprot2ref;
 
 	
 	public void update_size(){
@@ -189,6 +204,17 @@ public class VisualizeFrame extends JFrame {
 		//System.out.println(treePath);
 		database.UniprotWebFasta webFasta;
 		
+		String pattern = "(.*)-\\d*?";
+		
+		Pattern r = Pattern.compile(pattern);
+		
+		Matcher m = r.matcher(UniprotID);
+		String canonicalUniprotID;
+		if (m.find( )) {
+			canonicalUniprotID=m.group(1);
+		}else{
+			canonicalUniprotID=UniprotID;
+		}
 		
 		try {
 			treeFile=new evolution.treeFile(this.getBufferedReader_fromDB(treePath));
@@ -212,22 +238,57 @@ public class VisualizeFrame extends JFrame {
 		//System.out.println("step3");
 		try {
 			//System.out.println("step4");
-			webFasta = new database.UniprotWebFasta("http://www.uniprot.org/uniprot/"+UniprotID+".fasta");
+			webFasta = new database.UniprotWebFasta("https://www.uniprot.org/uniprot/"+canonicalUniprotID+".fasta");
 			//System.out.println(aln.getSeqRef());
 			//System.out.println(webFasta.getSeq());
 
-			if (!aln.getSeqRef(ref_species).startsWith(webFasta.getSeq())){
+			if (UniprotID.contains("-") || !aln.getSeqRef(ref_species).startsWith(webFasta.getSeq()) ){
 				String errMessage = "\"BE CAREFULL\"\n"
-	    		        + "The Uniprot Sequence does not match perfectly with the one in the alignment\n"
-	    		        + "Uniprot datas are likely to be false! ;-) ";
-	    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "Database Error",
-	    		        JOptionPane.WARNING_MESSAGE);
-			}
+	    		        + "The Uniprot Sequence does not match perfectly with the one in the alignment.\n";
+				try {
+					Sequence s1 = SequenceParser.parse(aln.getSeqRef(ref_species));
+					s1.setId("Reference");
+					s1.setDescription("Reference in the alignment");
+					//System.out.println(s1);
+					//System.out.println(webFasta.getSeq());
+					Sequence s2 = SequenceParser.parse(webFasta.getSeq());
+					s2.setId("Uniprot");
+					s2.setDescription("Sequence from uniprot API");
+					Matrix matrix = MatrixLoader.load("BLOSUM62");
+					float open_gap = 6;
+					float extend_gap = 2;
+					Alignment alignment = SmithWatermanGotoh.align(s1, s2, matrix, open_gap,extend_gap);
+					errMessage=errMessage+ "A Smith Waterman Gotoh alignment have been performed to ensure the mapping of feature positions in uniprot sequence (available via uniprot API) with the reference sequence used in the alignment. \n" 
+							+"This could result from differences in the definition of canonical isoform (UCSC vs Uniprot) or simply sequence conflict.\n" +
+							"Issues are automatically fixed in most cases but if below is reported a high number of mismatches please be carefull and consider revisiting the alignment with provided ids.\n" +
+							"\n" +alignment.getSummary()+ "Start in reference: "+(alignment.getStart1()+1)+"\n"+"End in reference: "+(alignment.getStart1()+alignment.getLength()) ;
+					uniprot2ref = new HashMap<Integer,Integer>();
+					char letterRef;
+					char letterUniprot;
+					int gap_count=0;
+					for(int i=alignment.getStart2(); i<alignment.getStart2()+alignment.getLength(); i++){
+						letterRef=alignment.getSequence1()[i-alignment.getStart2()];
+						letterUniprot=alignment.getSequence2()[i-alignment.getStart2()];
+						if (letterRef=='-'){
+							gap_count=gap_count+1;
+						}
+						else if (letterUniprot=='-'){
+							gap_count=gap_count-1;
+						}else if (letterRef==letterUniprot){
+							uniprot2ref.put(1+i,1+i-alignment.getStart2()+alignment.getStart1()-gap_count);
+							//int j =i-alignment.getStart2()+alignment.getStart1()-gap_count;
+							//System.out.println("uniprot: "+i+" / ref:"+j);
+						}
+					}
 
-			if (UniprotID.contains("-")){
-				String errMessage = "\"BE CAREFULL\"\n"
-	    		        + "The Best Match sequence used here is not the canonical\n"
-	    		        + "Uniprot feature coordinate are likely to be false! ;-) ";
+				} catch (SequenceParserException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (MatrixLoaderException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 	    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "Database Error",
 	    		        JOptionPane.WARNING_MESSAGE);
 			}
@@ -253,8 +314,10 @@ public class VisualizeFrame extends JFrame {
 		}
 
 		//featureAPI = new tools.featureAPI(uniprotPath,positions);
+		
+		
 		try {
-			featureAPI = new features.featureAPI(new URL("https://www.uniprot.org/uniprot/"+UniprotID+".txt"),positions);
+			featureAPI = new features.featureAPI(new URL("https://www.uniprot.org/uniprot/"+canonicalUniprotID+".txt"),positions,uniprot2ref);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
