@@ -19,13 +19,22 @@ git clone https://fouret.me/gitea/jfouret/seqViewer.git
 cd seqViewer
 make
 ```
-
 # Usage
 
 On a virtual desktop just click on the `seqViewer.jar` file. By command line: `java -jar seqViewer.jar`
 
-# Getting Started
+# Database format
+seqViewer use a database in the zip archive with format specification detailed soon.
+You can ask to be provided an example of database to julien.fouret@viroscan3d.com
+# LICENCE
+## JAligner
 
-In the folder `pteropus_vs_mammals` you'll find ~800 folders that are input for visualization. You can specified `pteropus_vs_mammals` folder as main default folder. Each folder correspond to a gene that is is under branch-site positive selection in *Pteropus* ancestor.
+All files under the JAligner folder have been copied and modified from https://github.com/ahmedmoustafa/JAligner repository owned by ahmedmoustafa github.com user.
 
+This files are licenced under the GNU General Public License v2.0 : https://github.com/ahmedmoustafa/JAligner/blob/master/LICENSE
 
+## seqViewer
+
+All other files in this repository are authored by Julien FOURET and licenced under the GNU Public Licence v3.0
+
+This work have been done during a PhD fellowship co-funded by [ViroScan3D](http://www.viroscan3d.com/) and the DGA (Direction Générale de l'Armement) in the context of a [CIFRE-Défense](https://www.ixarm.com/fr/theses-dga-cifre-defense)
