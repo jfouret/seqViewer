@@ -66,6 +66,8 @@ public class startMenu extends JFrame {
 	String WorkDir = ".";
 	ZipFile database ;
 	String genCodeChoice = "standard";
+	private JTextField textField_gapopen;
+	private JTextField textField_gapextend;
 	
 	
 	public void SetPaths(String Input_Path){
@@ -156,7 +158,7 @@ public class startMenu extends JFrame {
 		          alignment.genCode chosenGenCode= new alignment.genCode(startMenu.this.genCodeChoice);
 		          String seqType= startMenu.this.seqTypeBox.getSelectedItem().toString();
 		          try{
-		        	  gui.VisualizeFrame VisualizeFrame = new gui.VisualizeFrame(alignmentPath,treePath,pamlPath,exonsPath,blockPath,chosenGenCode,seqType,gene_name,spid,ref_species,database);
+		        	  gui.VisualizeFrame VisualizeFrame = new gui.VisualizeFrame(alignmentPath,treePath,pamlPath,exonsPath,blockPath,chosenGenCode,seqType,gene_name,spid,ref_species,database,Float.parseFloat(textField_gapopen.getText()),Float.parseFloat(textField_gapopen.getText()));
 			          VisualizeFrame.setVisible(true);
 			          VisualizeFrame.setDefaultCloseOperation(gui.VisualizeFrame.DISPOSE_ON_CLOSE);
 		          }catch(FileNotFoundException e){
@@ -248,11 +250,9 @@ public class startMenu extends JFrame {
 		JTextPane txtpnHuh = new JTextPane();
 		txtpnHuh.setContentType("text/html");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 2.1.0 </div></html>");
+		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 2.1.1 </div></html>");
 		txtpnHuh.setBounds(326, 54, 197, 54);
 		contentPane.add(txtpnHuh);
-		
-		
 		
 		scrollpane= new JScrollPane();
 		scrollpane.setBounds(0, 180, 802, 314);
@@ -269,6 +269,22 @@ public class startMenu extends JFrame {
 		txtpnNbYou.setText("NB : you need a working internet connection for the software to query protein annotation via uniprot API");
 		txtpnNbYou.setBounds(32, 108, 770, 23);
 		contentPane.add(txtpnNbYou);
+		
+		textField_gapopen = new JTextField();
+		textField_gapopen.setText("6");
+		textField_gapopen.setBounds(648, 81, 24, 20);
+		contentPane.add(textField_gapopen);
+		textField_gapopen.setColumns(10);
+		
+		textField_gapextend = new JTextField();
+		textField_gapextend.setText("2");
+		textField_gapextend.setColumns(10);
+		textField_gapextend.setBounds(682, 81, 24, 20);
+		contentPane.add(textField_gapextend);
+		
+		JLabel lblGapOpenextend = new JLabel("Gap: open/extend");
+		lblGapOpenextend.setBounds(620, 54, 110, 26);
+		contentPane.add(lblGapOpenextend);
 		
 		table = new JTable();
 		table.setBounds(0, 0, 802, 314);

@@ -196,8 +196,7 @@ public class VisualizeFrame extends JFrame {
 		return(bf);
 	}
 	
-	
-	public VisualizeFrame(String alignmentPath, String treePath,String pamlPath,String exonBedPath,String blockBedPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID, String ref_species,ZipFile in_database) throws FileNotFoundException {
+	public VisualizeFrame(String alignmentPath, String treePath,String pamlPath,String exonBedPath,String blockBedPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID, String ref_species,ZipFile in_database,float open_gap,float extend_gap) throws FileNotFoundException {
 		
 		database=in_database;
 		
@@ -255,8 +254,6 @@ public class VisualizeFrame extends JFrame {
 					s2.setId("Uniprot");
 					s2.setDescription("Sequence from uniprot API");
 					Matrix matrix = MatrixLoader.load("BLOSUM62");
-					float open_gap = 6;
-					float extend_gap = 2;
 					Alignment alignment = SmithWatermanGotoh.align(s1, s2, matrix, open_gap,extend_gap);
 					errMessage=errMessage+ "A Smith Waterman Gotoh alignment have been performed to ensure the mapping of feature positions in uniprot sequence (available via uniprot API) with the reference sequence used in the alignment. \n" 
 							+"This could result from differences in the definition of canonical isoform (UCSC vs Uniprot) or simply sequence conflict.\n" +
