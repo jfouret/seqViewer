@@ -33,6 +33,7 @@ All files under the JAligner folder have been copied and modified from https://g
 
 This files are licenced under the GNU General Public License v2.0 : https://github.com/ahmedmoustafa/JAligner/blob/master/LICENSE
 
+```
 /*
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,6 +49,7 @@ This files are licenced under the GNU General Public License v2.0 : https://gith
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+```
 
 ## seqViewer
 
@@ -55,6 +57,7 @@ All other files in this repository are authored by Julien FOURET and licenced un
 
 This work have been done during a PhD fellowship co-funded by [ViroScan3D](http://www.viroscan3d.com/) and the DGA (Direction Générale de l'Armement) in the context of a [CIFRE-Défense](https://www.ixarm.com/fr/theses-dga-cifre-defense)
 
+```
 /*
  *   seqViewer is a program dedicated to the visualization of sites under 
  *   branch-site positive selection or similar approaches with superpositions 
@@ -75,3 +78,4 @@ This work have been done during a PhD fellowship co-funded by [ViroScan3D](http:
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+```
