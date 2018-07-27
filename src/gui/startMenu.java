@@ -117,7 +117,7 @@ public class startMenu extends JFrame {
 		
 		JButton btnLoadGene = new JButton("Load the database");
 		
-		btnLoadGene.setBounds(107, 67, 143, 34);
+		btnLoadGene.setBounds(355, 66, 143, 34);
 		contentPane.add(btnLoadGene);
 		
 		
@@ -200,13 +200,13 @@ public class startMenu extends JFrame {
 		contentPane.add(v3dimgLab);
 		
 		JLabel ciriimgLab = new JLabel();
-		ciriimgLab.setBounds(743, 3, 59, 56);
+		ciriimgLab.setBounds(724, 30, 59, 56);
 		ImageIcon ciriimg = new ImageIcon(new ImageIcon(classLoader.getResource("ressources/CIRI.png")).getImage().getScaledInstance(ciriimgLab.getWidth(), ciriimgLab.getHeight(), Image.SCALE_DEFAULT));
 		ciriimgLab.setIcon(ciriimg);
 		contentPane.add(ciriimgLab);
 		
 		txtfilter = new JTextField();
-		txtfilter.setBounds(153, 144, 161, 23);
+		txtfilter.setBounds(115, 144, 161, 23);
 		contentPane.add(txtfilter);
 
 		txtfilter.getDocument().addDocumentListener(new DocumentListener() {
@@ -269,10 +269,11 @@ public class startMenu extends JFrame {
 		contentPane.add(lblTitle);
 				
 		JTextPane txtpnHuh = new JTextPane();
-		txtpnHuh.setContentType("text/html");
+		txtpnHuh.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		txtpnHuh.setContentType("text");
 		txtpnHuh.setEditable(false);
-		txtpnHuh.setText("<html><div align=\"center\"> Author : Julien FOURET<br> Version 2.1.1 </div></html>");
-		txtpnHuh.setBounds(326, 54, 197, 54);
+		txtpnHuh.setText("Version 2.1.1  Copyright (C) 2018  Julien Fouret");
+		txtpnHuh.setBounds(495, 0, 220, 26);
 		contentPane.add(txtpnHuh);
 		
 		scrollpane= new JScrollPane();
@@ -280,7 +281,7 @@ public class startMenu extends JFrame {
 		contentPane.add(scrollpane);
 		
 		JLabel lblSearch = new JLabel("SEARCH :");
-		lblSearch.setBounds(42, 142, 94, 26);
+		lblSearch.setBounds(22, 142, 94, 26);
 		contentPane.add(lblSearch);
 		
 		JTextPane txtpnNbYou = new JTextPane();
@@ -288,24 +289,47 @@ public class startMenu extends JFrame {
 		txtpnNbYou.setForeground(Color.RED);
 		txtpnNbYou.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		txtpnNbYou.setText("NB : you need a working internet connection for the software to query protein annotation via uniprot API");
-		txtpnNbYou.setBounds(32, 108, 770, 23);
+		txtpnNbYou.setBounds(32, 108, 527, 23);
 		contentPane.add(txtpnNbYou);
 		
 		textField_gapopen = new JTextField();
 		textField_gapopen.setText("6");
-		textField_gapopen.setBounds(648, 81, 24, 20);
+		textField_gapopen.setBounds(325, 156, 24, 20);
 		contentPane.add(textField_gapopen);
 		textField_gapopen.setColumns(10);
 		
 		textField_gapextend = new JTextField();
 		textField_gapextend.setText("2");
 		textField_gapextend.setColumns(10);
-		textField_gapextend.setBounds(682, 81, 24, 20);
+		textField_gapextend.setBounds(359, 156, 24, 20);
 		contentPane.add(textField_gapextend);
 		
 		JLabel lblGapOpenextend = new JLabel("Gap: open/extend");
-		lblGapOpenextend.setBounds(620, 54, 110, 26);
+		lblGapOpenextend.setBounds(297, 129, 110, 26);
 		contentPane.add(lblGapOpenextend);
+		
+		JButton btnAbout = new JButton("About...");
+		btnAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String aboutMsg="seqViewer is a program dedicated to the visualization of sites under "
+						+ "\n branch-site positive selection or similar approaches with superpositions"
+						+ "\n with annotated UniProt features."
+						+ "\n\n"
+						+ "All licence copyright information are stated in the README.md of the git repository here : https://fouret.me/gitea/jfouret/seqViewer"
+						+ "\n\n"
+						+ "This program use the JAligner module (modified) under the GNU General Public License v2"
+						+ "\n More details are available here : https://github.com/ahmedmoustafa/JAligner"
+						+ "\n\n"
+						+ "Copyright (C) 2018  Julien Fouret"
+						+ "\n This work have been done during a PhD fellowship co-funded by [ViroScan3D](http://www.viroscan3d.com/) "
+						+ "\n and the DGA (Direction Générale de l'Armement) in the context of a [CIFRE-Défense](https://www.ixarm.com/fr/theses-dga-cifre-defense)"
+						+ "\n all parts of the seqViewer program except JAligner module are under the GNU Public Licence v3.0";
+				JOptionPane.showMessageDialog(new JFrame(), aboutMsg, "LICENCE",
+	    		        JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		btnAbout.setBounds(714, 0, 88, 19);
+		contentPane.add(btnAbout);
 		
 		table = new JTable();
 		table.setBounds(0, 0, 802, 314);
