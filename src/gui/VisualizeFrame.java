@@ -218,7 +218,7 @@ public class VisualizeFrame extends JFrame {
 	}
 	
 	public VisualizeFrame(String alignmentPath, String treePath,String pamlPath,String exonBedPath,String blockBedPath,alignment.genCode genCode,String input_seqType,String geneName, String UniprotID, String ref_species,ZipFile in_database,float open_gap,float extend_gap) throws FileNotFoundException {
-		
+		long startTime = System.currentTimeMillis();
 		database=in_database;
 		
 		//System.out.println(treePath);
@@ -236,6 +236,11 @@ public class VisualizeFrame extends JFrame {
 			canonicalUniprotID=UniprotID;
 		}
 		
+		long endTime   = System.currentTimeMillis();
+		long totalTime = endTime - startTime;
+		System.out.println("Frame initiated in "+totalTime+"ms");
+		startTime=endTime;
+		
 		try {
 			treeFile=new evolution.treeFile(this.getBufferedReader_fromDB(treePath));
 		} catch (IOException e2) {
@@ -245,22 +250,43 @@ public class VisualizeFrame extends JFrame {
 		String[] species = treeFile.getSpecies();
 		//System.out.println("step1");
 		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Tree file loaded in "+totalTime+"ms");
+		startTime=endTime;
+		
 		frametitle=geneName + " - " + input_seqType;
 		//GENETEST=geneName;
 		setTitle(frametitle);
 		seqType=input_seqType;
+		
+		
 		alignment.alnFile alnFile= new alignment.alnFile(this.getBufferedReader_fromDB(alignmentPath));
 		//System.out.println("step2");
 		
-		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Alignment file loaded in "+totalTime+"ms");
+		startTime=endTime;
 		
 		aln= new alignment.Alignment(alnFile.readALN(),genCode);
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Alignment object initiated in "+totalTime+"ms");
+		startTime=endTime;
+		
 		//System.out.println("step3");
 		try {
 			//System.out.println("step4");
 			webFasta = new database.UniprotWebFasta("https://www.uniprot.org/uniprot/"+canonicalUniprotID+".fasta");
 			//System.out.println(aln.getSeqRef());
 			//System.out.println(webFasta.getSeq());
+			
+			endTime   = System.currentTimeMillis();
+			totalTime = endTime - startTime;
+			System.out.println("Fasta sequence from Uniprot loaded in "+totalTime+"ms");
+			startTime=endTime;
 
 			if (UniprotID.contains("-") || !aln.getSeqRef(ref_species).startsWith(webFasta.getSeq()) ){
 				String errMessage = "\"BE CAREFULL\"\n"
@@ -300,13 +326,14 @@ public class VisualizeFrame extends JFrame {
 					}
 
 				} catch (SequenceParserException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (MatrixLoaderException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+				endTime   = System.currentTimeMillis();
+				totalTime = endTime - startTime;
+				System.out.println("Exact alignment (optional in case of conflicts) performed in "+totalTime+"ms");
+				startTime=endTime;
 	    		    JOptionPane.showMessageDialog(new JFrame(), errMessage, "Database Error",
 	    		        JOptionPane.WARNING_MESSAGE);
 			}
@@ -321,10 +348,21 @@ public class VisualizeFrame extends JFrame {
     		        JOptionPane.WARNING_MESSAGE);
 
 		}
-
+		
 		aln.buildHTML(seqType, species);
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("HTML code built for alignment in "+totalTime+"ms");
+		startTime=endTime;
+		
 		positions= new evolution.positions(this.getBufferedReader_fromDB(exonBedPath),this.getBufferedReader_fromDB(blockBedPath),aln.get_ref_dna(ref_species));
 
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Positions object egenrated in "+totalTime+"ms");
+		startTime=endTime;
+		
 		try {
 			selection = new evolution.pamlFile(this.getBufferedReader_fromDB(pamlPath),positions);
 		} catch (IOException e1) {
@@ -333,6 +371,10 @@ public class VisualizeFrame extends JFrame {
 
 		//featureAPI = new tools.featureAPI(uniprotPath,positions);
 		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("PAML file (or equivalent) parsed in "+totalTime+"ms");
+		startTime=endTime;
 		
 		try {
 			featureAPI = new features.featureAPI(new URL("https://www.uniprot.org/uniprot/"+canonicalUniprotID+".txt"),positions,uniprot2ref);
@@ -342,6 +384,11 @@ public class VisualizeFrame extends JFrame {
 			e.printStackTrace();
 		}
 
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Fearture uniprot API request parsed in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		windowWidth=800;
 		windowHeight=600;
 		setBounds(100, 100, windowWidth, windowHeight);
@@ -349,12 +396,30 @@ public class VisualizeFrame extends JFrame {
 		contentPane.setBackground(tools.myCST.backColor);
 		contentPane.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Some graphical(0) interfaces generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
+		
+		
+		
 		txtpnAln = new JLabel();
 		txtpnAln.setVerticalAlignment(SwingConstants.TOP);
 		txtpnAln.setBackground(tools.myCST.backColor);
 		txtpnAln.setBorder(null);
-
-		txtpnAln.setText(aln.getHTML());
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Alignment graphical interface initiation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
+		String alignment_txt=aln.getHTML();
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Get HTML text of the alignment in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
 		
 		scrolledTxtpnAln = new JScrollPane(txtpnAln);
 		scrolledTxtpnAln.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -365,12 +430,24 @@ public class VisualizeFrame extends JFrame {
 		scrolledTxtpnAln.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 		
 		scrolledTxtpnAln.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
-
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Some graphical(1) interfaces generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
+		
+		
 		txtpnAlnSpecies= new JLabel();
 		txtpnAlnSpecies.setText(treeFile.getHTreeML());
 		txtpnAlnSpecies.setVerticalAlignment(SwingConstants.TOP);
 		txtpnAlnSpecies.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Tree graphical interface generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		txtpnlegendSelection= new JLabel();
 		txtpnlegendSelection.setHorizontalAlignment(SwingConstants.RIGHT);
 		txtpnlegendSelection.setText("Selection");
@@ -381,8 +458,17 @@ public class VisualizeFrame extends JFrame {
 		txtpnlegendExons.setText("Exons switch");
 		txtpnlegendExons.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Some graphical(2) interfaces generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		txtpnRefPos= new JLabel();
-		txtpnRefPos.setText(aln.getPos(seqType));
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Postions graphical interface generated in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
 		
 		posTypeBox = new JComboBox<String>();
 		posTypeBox.addItem("Aln positions");
@@ -392,31 +478,53 @@ public class VisualizeFrame extends JFrame {
 		posTypeBox.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
+				long startTime=System.currentTimeMillis();
 				if (posTypeBox.getSelectedItem()=="Aln positions") {
 					txtpnRefPos.setText(aln.getPos(seqType));
 				}else if (posTypeBox.getSelectedItem()=="Ref positions"){
 					txtpnRefPos.setText(positions.getPos(seqType,aln.getSize()));//position in ref
 				}
 				contentPane.validate();
+				long endTime   = System.currentTimeMillis();
+				long totalTime = endTime - startTime;
+				System.out.println("Position graphical interface modified in "+totalTime+"ms");
 			}
 		});
-		
 		scrolledTxtpnRefPos = new JScrollPane(txtpnRefPos);
 		scrolledTxtpnRefPos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrolledTxtpnRefPos.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 		scrolledTxtpnRefPos.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Some graphical(3) interfaces generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		txtpnExons= new JLabel();
-		txtpnExons.setText(positions.buildHTML(seqType));
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Exon alternance graphical interface generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
 		
 		scrolledTxtpnExons = new JScrollPane(txtpnExons);
 		scrolledTxtpnExons.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrolledTxtpnExons.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 		scrolledTxtpnExons.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Some graphical(4) interfaces generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		txtpnSelection= new JLabel();
 		txtpnSelection.setBackground(tools.myCST.backColor);
-		txtpnSelection.setText(selection.buildHTML(aln.getSize(), seqType));
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Selection interface generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		scrolledTxtpnSelection = new JScrollPane(txtpnSelection);
 		scrolledTxtpnSelection.setBorder(new LineBorder(new Color(0, 0, 0), 1));
 		scrolledTxtpnSelection.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -448,6 +556,7 @@ public class VisualizeFrame extends JFrame {
 		btnUpdateUniprot = new JButton("Uniprot: update selection");
 		btnUpdateUniprot.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent ae) {
+		    	  long startTime=System.currentTimeMillis();
 		    	  int saveStart=scrolledTxtpnAln.getHorizontalScrollBar().getValue();
 		    	  contentPane.remove(scrollFeatPane);
 		    	  contentPane.remove(featBar);
@@ -458,6 +567,9 @@ public class VisualizeFrame extends JFrame {
 		    	  update_size();
 		    	  Set_scroll_Start(0);
 		    	  Set_scroll_Start(saveStart);
+		    	  long endTime   = System.currentTimeMillis();
+			  	long totalTime = endTime - startTime;
+			  	System.out.println("Uniprot feature update in "+totalTime+"ms");
 		      }
 		    });
 		btnUpdateUniprot.setBounds(5, 10, 178, 23);
@@ -480,12 +592,63 @@ public class VisualizeFrame extends JFrame {
 		      }
 		    });
 		btnMinus.setBounds(518, 7, 45, 23);
-		featSelect = new gui.featureSelect(featureAPI,frametitle);
 		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Some graphical(5) interfaces generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
+		featSelect = new gui.featureSelect(featureAPI,frametitle);
 		featLabelArray=featureAPI.getLabels(seqType);
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Feature graphical interfaces generation in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		updateFeatures();
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Feature first update in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		update_font();
 
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Font first update in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
+		txtpnAln.setText(alignment_txt);
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Set HTML text of the alignment in graphical interface in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
+		
+		txtpnExons.setText(positions.buildHTML(seqType));
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Set HTML text of the exons alternance in graphical interface in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
+		txtpnSelection.setText(selection.buildHTML(aln.getSize(), seqType));
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Set HTML text of the selection in graphical interface in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
+		txtpnRefPos.setText(aln.getPos(seqType));
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Set HTML text of the positions in graphical interface in "+totalTime+"ms");
+		startTime=System.currentTimeMillis();
+		
 		contentPane.add(scrolledTxtpnAln);
 		contentPane.add(txtpnAlnSpecies);
 		contentPane.add(scrolledTxtpnRefPos);
@@ -517,6 +680,10 @@ public class VisualizeFrame extends JFrame {
 		
 		splitPane.setDividerLocation(150);
 		splitPane.setVisible(true);
+		
+		endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
+		System.out.println("Some graphical(6) interfaces generation in "+totalTime+"ms");
 	}
 	
 	private void updateFeatures() {

@@ -79,12 +79,16 @@ public class featureAPI {
 						desc=split[4];
 					}
 					
-					if (uniprot2ref.containsKey(f_start) &&  uniprot2ref.containsKey(f_end)){
-						keepFT=true;
-						f_start=uniprot2ref.get(f_start);
-						f_end=uniprot2ref.get(f_end);
+					if (uniprot2ref!=null){
+						if (uniprot2ref.containsKey(f_start) &&  uniprot2ref.containsKey(f_end)){
+							keepFT=true;
+							f_start=uniprot2ref.get(f_start);
+							f_end=uniprot2ref.get(f_end);
+						}else{
+							keepFT=false;
+						}
 					}else{
-						keepFT=false;
+						keepFT=true;
 					}
 					
 					if (keepFT){
